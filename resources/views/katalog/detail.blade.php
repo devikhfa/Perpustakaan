@@ -88,7 +88,7 @@
 
                         </table>
 
-                        <a href="{{ route('buku.index') }}" class="btn btn-secondary btn-sm">
+                        <a href="{{ route('katalog.index') }}" class="btn btn-secondary btn-sm">
                             Kembali
                         </a>
                     </div>

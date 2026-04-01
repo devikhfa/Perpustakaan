@@ -180,7 +180,7 @@
 
                 <li class="nav-header">Laporan</li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('peminjaman.index')}}" class="nav-link">
                         <i class="nav-icon fas fa-file"></i>
                         <p>Peminjaman</p>
                     </a>

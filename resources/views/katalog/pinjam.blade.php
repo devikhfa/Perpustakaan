@@ -25,154 +25,117 @@
         <div class="row">
             <div class="col-12">
                 <div class="callout callout-info">
-                    <h5><i class="fas fa-info"></i> Note:</h5>
-                    This page has been enhanced for printing. Click the print button at the bottom of the invoice to test.
+                    <h5><i class="fas fa-info"></i> Catatan:</h5>
+                    Estimasi tanggal pengembalian buku akan terisi secara otomatis, yaitu 3 hari setelah tanggal peminjaman. Jika buku tidak dikembalikan hingga melewati batas waktu tersebut, peminjam akan dikenakan denda.
                 </div>
                 <!-- Main content -->
                 <div class="invoice p-3 mb-3">
-                    <!-- title row -->
-                    <div class="row">
-                    </div>
-                    <!-- info row -->
-                    <div class="row invoice-info">
-                    <div class="col-sm-4 invoice-col">
-                        Data Peminjam
-                        <address>
-                        <strong>Admin, Inc.</strong><br>
-                        795 Folsom Ave, Suite 600<br>
-                        San Francisco, CA 94107<br>
-                        Phone: (804) 123-5432<br>
-                        Email: info@almasaeedstudio.com
-                        </address>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-sm-4 invoice-col">
-                        To
-                        <address>
-                        <strong>John Doe</strong><br>
-                        795 Folsom Ave, Suite 600<br>
-                        San Francisco, CA 94107<br>
-                        Phone: (555) 539-1037<br>
-                        Email: john.doe@example.com
-                        </address>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-sm-4 invoice-col">
-                        <b>Invoice #007612</b><br>
-                        <br>
-                        <b>Order ID:</b> 4F3S8J<br>
-                        <b>Payment Due:</b> 2/22/2014<br>
-                        <b>Account:</b> 968-34567
-                    </div>
-                    <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-
-                    <!-- Table row -->
-                    <div class="row">
-                    <div class="col-12 table-responsive">
-                        <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Qty</th>
-                            <th>Product</th>
-                            <th>Serial #</th>
-                            <th>Description</th>
-                            <th>Subtotal</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Call of Duty</td>
-                            <td>455-981-221</td>
-                            <td>El snort testosterone trophy driving gloves handsome</td>
-                            <td>$64.50</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Need for Speed IV</td>
-                            <td>247-925-726</td>
-                            <td>Wes Anderson umami biodiesel</td>
-                            <td>$50.00</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Monsters DVD</td>
-                            <td>735-845-642</td>
-                            <td>Terry Richardson helvetica tousled street art master</td>
-                            <td>$10.70</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Grown Ups Blue Ray</td>
-                            <td>422-568-642</td>
-                            <td>Tousled lomo letterpress</td>
-                            <td>$25.99</td>
-                        </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                    <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-
-                    <div class="row">
-                    <!-- accepted payments column -->
-                    <div class="col-6">
-                        <p class="lead">Payment Methods:</p>
-                        <img src="../../dist/img/credit/visa.png" alt="Visa">
-                        <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
-                        <img src="../../dist/img/credit/american-express.png" alt="American Express">
-                        <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
-
-                        <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                        Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
-                        plugg
-                        dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                        </p>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-6">
-                        <p class="lead">Amount Due 2/22/2014</p>
-
-                        <div class="table-responsive">
-                        <table class="table">
-                            <tbody><tr>
-                            <th style="width:50%">Subtotal:</th>
-                            <td>$250.30</td>
-                            </tr>
-                            <tr>
-                            <th>Tax (9.3%)</th>
-                            <td>$10.34</td>
-                            </tr>
-                            <tr>
-                            <th>Shipping:</th>
-                            <td>$5.80</td>
-                            </tr>
-                            <tr>
-                            <th>Total:</th>
-                            <td>$265.24</td>
-                            </tr>
-                        </tbody></table>
+                    <form action="{{ route('katalog.store') }}" method="POST" id="formTransaksi">
+                        @csrf
+                        
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Peminjam <span class="text-danger">*</span></label>
+                                    <input type="text" name="nama_peminjam" class="form-control" id="nama_peminjam" value="TESTING" readonly>
+                                    <input type="hidden" name="peminjam_id" id="peminjam_id" value="1">
+                                    <input type="hidden" name="buku_id" value="{{ $buku->id }}">
+                                    @error('peminjam_id')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Email Peminjam</label>
+                                    <input type="text" name="email_peminjam" class="form-control" id="email_peminjam" value="TESTING" readonly>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Alamat Peminjam</label>
+                                    <input type="text" name="alamat_peminjam" class="form-control" id="alamat_peminjam" value="{{ old('alamat_peminjam', Auth::user()->alamat ?? '-') }}" readonly>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-
-                    <!-- this row will not appear when printing -->
-                    <div class="row no-print">
-                    <div class="col-12">
-                        <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                        <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Submit
-                        Payment
-                        </button>
-                        <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                        <i class="fas fa-download"></i> Generate PDF
-                        </button>
-                    </div>
-                    </div>
+                        
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Tanggal Pinjam <span class="text-danger">*</span></label>
+                                    <input type="date" name="tgl_pinjam" class="form-control" id="tgl_pinjam" value="{{ old('tgl_pinjam', date('Y-m-d')) }}" required>
+                                    @error('tgl_pinjam')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Tanggal Jatuh Tempo <span class="text-danger">*</span></label>
+                                    <input type="date" name="tgl_jatuh_tempo" class="form-control" id="tgl_jatuh_tempo" value="{{ old('tgl_jatuh_tempo') }}" readonly required>
+                                    <small class="form-text text-muted">Otomatis 3 hari kerja (tidak termasuk Sabtu & Minggu)</small>
+                                    @error('tgl_jatuh_tempo')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Table row -->
+                        <div class="row">
+                            <div class="col-12 table-responsive">
+                                <label>Detail Buku Yang Dipinjam</label>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Judul</th>
+                                            <th>Kategori</th>
+                                            <th>Penulis</th>
+                                            <th>Penerbit</th>
+                                            <th>Tahun Terbit</th>
+                                            <th>Stok Tersedia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ $buku->judul }}</td>
+                                            <td>{{ $buku->kategori->nama_kategori ?? '-' }}</td>
+                                            <td>{{ $buku->penulis }}</td>
+                                            <td>{{ $buku->penerbit }}</td>
+                                            <td>{{ $buku->tahun_terbit }}</td>
+                                            <td class="text-{{ $buku->qty > 0 ? 'success' : 'danger' }}">
+                                                {{ $buku->qty }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Catatan</label>
+                                    <textarea name="catatan" class="form-control" rows="3" placeholder="Isi catatan jika diperlukan...">{{ old('catatan') }}</textarea>
+                                    @error('catatan')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Button row -->
+                        <div class="row no-print">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-success float-right" {{ $buku->qty <= 0 ? 'disabled' : '' }}>
+                                    <i class="fas fa-save"></i> Submit
+                                </button>
+                                <a href="{{ route('katalog.index') }}" class="btn btn-primary float-right" style="margin-right: 5px;">
+                                    <i class="fas fa-arrow-left"></i> Kembali
+                                </a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <!-- /.invoice -->
             </div>
@@ -180,4 +143,46 @@
     </div>
 </section>
 <!-- /.content -->
+<script>
+    function hitungTanggalJatuhTempo(tanggalPinjam) {
+        if (!tanggalPinjam) return '';
+        
+        let tanggal = new Date(tanggalPinjam);
+        let hariKerja = 0;
+        
+        while (hariKerja < 3) {
+            tanggal.setDate(tanggal.getDate() + 1);
+            if (tanggal.getDay() !== 0 && tanggal.getDay() !== 6) {
+                hariKerja++;
+            }
+        }
+        const tahun = tanggal.getFullYear();
+        const bulan = String(tanggal.getMonth() + 1).padStart(2, '0');
+        const hari = String(tanggal.getDate()).padStart(2, '0');
+        
+        return `${tahun}-${bulan}-${hari}`;
+    }
+    
+    document.getElementById('tgl_pinjam').addEventListener('change', function() {
+        const tglJatuhTempo = hitungTanggalJatuhTempo(this.value);
+        document.getElementById('tgl_jatuh_tempo').value = tglJatuhTempo;
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const tglPinjam = document.getElementById('tgl_pinjam');
+        if (tglPinjam.value) {
+            const tglJatuhTempo = hitungTanggalJatuhTempo(tglPinjam.value);
+            document.getElementById('tgl_jatuh_tempo').value = tglJatuhTempo;
+        }
+        
+        document.getElementById('formTransaksi').addEventListener('submit', function(e) {
+            const stokTersedia = {{ $buku->qty }};
+            if (stokTersedia <= 0) {
+                e.preventDefault();
+                alert('Maaf, stok buku sedang kosong!');
+                return false;
+            }
+        });
+    });
+</script>
 @endsection

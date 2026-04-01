@@ -34,6 +34,7 @@ Route::delete('/katepenggunagori/{id}', [PenggunaController::class, 'destroy'])-
 route::get("/katalog", [KatalogController::class, 'index'])->name('katalog.index');
 route::get("/katalog/detail/{id}", [KatalogController::class, 'detail'])->name('katalog.detail');
 route::get("/katalog/pinjam/{id}", [KatalogController::class, 'pinjam'])->name('katalog.pinjam');
+route::post("/katalog/store", [KatalogController::class, 'store'])->name('katalog.store');
 
 Route::get('/masuk', function () {
     return view('auth.masuk');
@@ -50,3 +51,11 @@ Route::post('/daftar', [AuthController::class, 'auth.daftar']);
 Route::get('/riwayat_peminjaman', function () {
     return view('riwayat_peminjaman.index');
 })->name('riwayat_peminjaman.index');
+
+Route::get('/peminjaman', function () {
+    return view('peminjaman.index');
+})->name('peminjaman.index');
+
+Route::get('/pinjam', function () {
+    return view('buku.pinjam');
+})->name('buku.pinjam');
