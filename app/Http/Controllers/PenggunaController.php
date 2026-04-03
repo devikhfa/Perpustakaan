@@ -53,7 +53,8 @@ class PenggunaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $pengguna = Pengguna::findOrFail($id);
+        return view('pengguna.detail', compact('pengguna'));
     }
 
     /**

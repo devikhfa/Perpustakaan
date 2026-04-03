@@ -16,6 +16,7 @@ class Transaksi extends Model
         'tgl_jatuh_tempo',
         'tgl_dikembalikan',
         'catatan',
+        'status_transaksi',
         'status',
         'created_by',
         'updated_by'

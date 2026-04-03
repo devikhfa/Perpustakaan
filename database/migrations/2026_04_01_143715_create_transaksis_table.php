@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('tgl_jatuh_tempo');
             $table->dateTime('tgl_dikembalikan');
             $table->text('catatan');
+            $table->int('status_transaksi');
             $table->boolean('status');
             $table->integer('created_by');
             $table->dateTime('created_at');

@@ -145,8 +145,17 @@
                         <p>Katalog</p>
                     </a>
                 </li>
+                <li class="nav-header">Transaksi</li>
                 <li class="nav-item">
-                    <a href="{{ route('riwayat_peminjaman.index')}}" class="nav-link">
+                    <a href="{{ route('transaksi.datapeminjaman')}}" class="nav-link">
+                        <i class="nav-icon fas fa-book-open"></i>
+                        <p>
+                            Data Peminjaman
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('transaksi.riwayatpeminjaman')}}" class="nav-link">
                         <i class="nav-icon fas fa-book-open"></i>
                         <p>
                             Riwayat Peminjaman

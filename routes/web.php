@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KatalogController;
+use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PenggunaController;
@@ -30,11 +31,16 @@ route::post("/pengguna/store", [PenggunaController::class, 'store'])->name('peng
 route::get('/pengguna/edit/{id}', [PenggunaController::class, 'edit'])->name('pengguna.edit');
 route::put('/pengguna/update/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
 Route::delete('/katepenggunagori/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+route::get('/pengguna/detail/{id}', [PenggunaController::class, 'show'])->name('pengguna.detail');
 
 route::get("/katalog", [KatalogController::class, 'index'])->name('katalog.index');
 route::get("/katalog/detail/{id}", [KatalogController::class, 'detail'])->name('katalog.detail');
 route::get("/katalog/pinjam/{id}", [KatalogController::class, 'pinjam'])->name('katalog.pinjam');
 route::post("/katalog/store", [KatalogController::class, 'store'])->name('katalog.store');
+
+route::get("/data-peminjaman", [TransaksiController::class, 'datapeminjaman'])->name('transaksi.datapeminjaman');
+route::get("/riwayat-peminjaman", [TransaksiController::class, 'riwayatpeminjaman'])->name('transaksi.riwayatpeminjaman');
+route::get("/detail-transaksi/{id}", [TransaksiController::class, 'detailtransaksi'])->name('transaksi.detailtransaksi');
 
 Route::get('/masuk', function () {
     return view('auth.masuk');
@@ -47,10 +53,6 @@ Route::get('/daftar', function () {
 })->name('daftar');
 
 Route::post('/daftar', [AuthController::class, 'auth.daftar']);
-
-Route::get('/riwayat_peminjaman', function () {
-    return view('riwayat_peminjaman.index');
-})->name('riwayat_peminjaman.index');
 
 Route::get('/peminjaman', function () {
     return view('peminjaman.index');

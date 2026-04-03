@@ -79,6 +79,7 @@ class KatalogController extends Controller
                 'tgl_pinjam' => $request->tgl_pinjam,
                 'tgl_jatuh_tempo' => $request->tgl_jatuh_tempo,
                 'catatan' => $request->catatan,
+                'status_transaksi' => 1,
                 'status' => true,
                 // 'created_by' => Auth::id(),
                 // 'updated_by' => Auth::id(),

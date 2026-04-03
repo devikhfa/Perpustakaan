@@ -52,7 +52,7 @@
                                 <td>{{ $k->password }}</td>
                                 <td>{{ $k->alamat }}</td>
                                 <td>
-                                    <a href="" class="btn btn-sm btn-secondary">show</a>
+                                    <a href="{{ route('pengguna.detail', $k->id) }}" class="btn btn-sm btn-secondary">show</a>
                                     <a href="{{ route('pengguna.edit', $k->id) }}" class="btn btn-sm btn-warning">edit</a>
                                     <form action="{{ route('pengguna.destroy', $k->id) }}" method="POST" style="display:inline;">
                                         @csrf
