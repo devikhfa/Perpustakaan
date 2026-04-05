@@ -69,12 +69,16 @@
                             <div class="col-3">
                                 @php
                                     $denda = 0;
-                                    if (!$transaksi->tgl_dikembalikan && now() > $transaksi->tgl_jatuh_tempo) {
-                                        $hariTerlambat = now()->diffInDays($transaksi->tgl_jatuh_tempo);
-                                        $denda = $hariTerlambat * 2000; // Rp 2000 per hari
-                                    } elseif ($transaksi->tgl_dikembalikan && $transaksi->tgl_dikembalikan > $transaksi->tgl_jatuh_tempo) {
-                                        $hariTerlambat = \Carbon\Carbon::parse($transaksi->tgl_dikembalikan)->diffInDays($transaksi->tgl_jatuh_tempo);
-                                        $denda = $hariTerlambat * 2000;
+                                    if (isset($transaksi->denda) && $transaksi->denda > 0) {
+                                        $denda = $transaksi->denda;
+                                    } else {
+                                        if (!$transaksi->tgl_dikembalikan && now()->startOfDay() > $transaksi->tgl_jatuh_tempo->startOfDay()) {
+                                            $hariTerlambat = now()->startOfDay()->diffInDays($transaksi->tgl_jatuh_tempo->startOfDay());
+                                            $denda = abs($hariTerlambat) * 2000;
+                                        } elseif ($transaksi->tgl_dikembalikan && $transaksi->tgl_dikembalikan->startOfDay() > $transaksi->tgl_jatuh_tempo->startOfDay()) {
+                                            $hariTerlambat = $transaksi->tgl_dikembalikan->startOfDay()->diffInDays($transaksi->tgl_jatuh_tempo->startOfDay());
+                                            $denda = abs($hariTerlambat) * 2000;
+                                        }
                                     }
                                 @endphp
                                 <div class="form-group">

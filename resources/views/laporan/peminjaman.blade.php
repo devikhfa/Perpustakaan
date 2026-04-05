@@ -1,0 +1,199 @@
+@extends('layoutes.main')
+@section('content')
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1 class="m-0">Laporan Peminjaman</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ $totalBuku ?? 0 }}</h3>
+                        <p>Buku</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="{{ route('buku.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ $totalAnggota ?? 0 }}</h3>
+                        <p>Anggota</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="{{ route('pengguna.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ $totalPinjaman ?? 0 }}</h3>
+                        <p>Pinjaman Aktif</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>Rp {{ number_format($totalDenda ?? 0, 0, ',', '.') }}</h3>
+                        <p>Total Denda</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+        
+        <!-- Main row -->
+        <div class="row">
+            <!-- Left col -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Daftar Peminjaman Buku</h3>
+                        <!-- <a href="{{ route('buku.pinjam') }}" class="btn btn-sm btn-primary float-right">
+                            <i class="fas fa-plus"></i> Pinjam Buku
+                        </a> -->
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Anggota</th>
+                                    <th>Judul Buku</th>
+                                    <th>Tanggal Pinjam</th>                          
+                                    <th>Tanggal Jatuh Tempo</th>
+                                    <th>Tanggal Kembali</th>
+                                    <th>Keterlambatan</th>
+                                    <th>Total Denda</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($transaksis as $key => $t)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $t->nama_pengguna }}</td>
+                                    <td>{{ $t->judul }}</td>
+                                    <td>{{ $t->tgl_pinjam ? \Carbon\Carbon::parse($t->tgl_pinjam)->format('d/m/Y') : '-' }}</td>
+                                    <td>{{ $t->tgl_jatuh_tempo ? \Carbon\Carbon::parse($t->tgl_jatuh_tempo)->format('d/m/Y') : '-' }}</td>
+                                    <td>
+                                        @if($t->tgl_dikembalikan)
+                                            {{ \Carbon\Carbon::parse($t->tgl_dikembalikan)->format('d/m/Y') }}
+                                        @else
+                                            <span class="badge badge-warning">Belum Kembali</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php
+                                            $hariTerlambat = 0;
+                                            $tglKembali = $t->tgl_dikembalikan ?? now();
+                                            if ($tglKembali > $t->tgl_jatuh_tempo) {
+                                                $hariTerlambat = abs(($tglKembali->startOfDay())->diffInDays($t->tgl_jatuh_tempo->startOfDay()));
+                                            }
+                                        @endphp
+                                        @if($hariTerlambat > 0)
+                                            <span class="text-danger">{{ $hariTerlambat }} hari</span>
+                                        @else
+                                            <span class="text-success">-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php
+                                            $denda = $t->denda ?? 0;
+                                            if ($denda == 0 && $hariTerlambat > 0) {
+                                                $denda = $hariTerlambat * 2000;
+                                            }
+                                        @endphp
+                                        @if($denda > 0)
+                                            <span class="text-danger font-weight-bold">
+                                                Rp {{ number_format($denda, 0, ',', '.') }}
+                                            </span>
+                                        @else
+                                            Rp 0
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php
+                                            $status = $t->status_transaksi;
+                                        @endphp
+                                        @if($status == 1)
+                                            <span class="badge badge-primary">Dipinjam</span>
+                                        @elseif($status == 2)
+                                            <span class="badge badge-warning">Menunggu Verifikasi</span>
+                                        @elseif($status == 3)
+                                            <span class="badge badge-success">Dikembalikan</span>
+                                        @else
+                                            <span class="badge badge-secondary">{{ $status }}</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                                        <div class="alert alert-info mb-0">
+                                            <i class="fas fa-info-circle"></i> Belum ada data peminjaman
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<script>
+    $(function () {
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+</script>
+@endsection

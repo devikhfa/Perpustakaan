@@ -57,10 +57,10 @@
                                             </h6>
                                             <div class="d-flex justify-content-between">
                                                 <a href="{{ route('katalog.detail', $k->id) }}" class="btn btn-sm btn-primary">
-                                                    Detail
+                                                    <i class="fas fa-eye"></i> Detail
                                                 </a>
                                                 <a href="{{ route('katalog.pinjam', $k->id) }}" class="btn btn-sm btn-success">
-                                                    Pinjam
+                                                    <i class="fas fa-book"></i> Pinjam
                                                 </a>
                                             </div>
                                         </div>

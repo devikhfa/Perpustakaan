@@ -18,8 +18,9 @@ return new class extends Migration
             $table->dateTime('tgl_pinjam');
             $table->dateTime('tgl_jatuh_tempo');
             $table->dateTime('tgl_dikembalikan');
+            $table->integer('denda')->default(0);
             $table->text('catatan');
-            $table->int('status_transaksi');
+            $table->integer('status_transaksi');
             $table->boolean('status');
             $table->integer('created_by');
             $table->dateTime('created_at');

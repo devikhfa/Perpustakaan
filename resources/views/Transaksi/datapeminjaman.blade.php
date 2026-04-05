@@ -63,23 +63,27 @@
                             <td>
                                 @php
                                     $denda = 0;
-                                    if (!$t->tgl_dikembalikan && now() > $t->tgl_jatuh_tempo) {
-                                        $hariTerlambat = now()->diffInDays($t->tgl_jatuh_tempo);
-                                        $denda = $hariTerlambat * 2000; // Rp 2000 per hari
-                                    } elseif ($t->tgl_dikembalikan && $t->tgl_dikembalikan > $t->tgl_jatuh_tempo) {
-                                        $hariTerlambat = \Carbon\Carbon::parse($t->tgl_dikembalikan)->diffInDays($t->tgl_jatuh_tempo);
-                                        $denda = $hariTerlambat * 2000;
+                                    if (isset($t->denda) && $t->denda > 0) {
+                                        $denda = $t->denda;
+                                    } else {
+                                        if (!$t->tgl_dikembalikan && now()->startOfDay() > $t->tgl_jatuh_tempo->startOfDay()) {
+                                            $hariTerlambat = now()->startOfDay()->diffInDays($t->tgl_jatuh_tempo->startOfDay());
+                                            $denda = abs($hariTerlambat) * 2000;
+                                        } elseif ($t->tgl_dikembalikan && $t->tgl_dikembalikan->startOfDay() > $t->tgl_jatuh_tempo->startOfDay()) {
+                                            $hariTerlambat = $t->tgl_dikembalikan->startOfDay()->diffInDays($t->tgl_jatuh_tempo->startOfDay());
+                                            $denda = abs($hariTerlambat) * 2000;
+                                        }
                                     }
                                 @endphp
                                 {{ number_format($denda, 0, ',', '.') }}
                             </td>
                             <td>
                                 @if($t->status_transaksi == 1)
-                                    <span class="badge badge-success">Dipinjam</span>
+                                    <span class="badge badge-primary">Dipinjam</span>
                                 @elseif($t->status_transaksi == 2)
                                     <span class="badge badge-warning">Mengajukan Pengembalian</span>
                                 @else
-                                    <span class="badge badge-secondary">Dikembalikan</span>
+                                    <span class="badge badge-success">Dikembalikan</span>
                                 @endif
                             </td>
                             <td>
@@ -88,7 +92,7 @@
                                         <i class="fas fa-eye"></i> Detail
                                     </a>
                                     @if($t->status_transaksi == 2)
-                                    <button type="button" class="btn btn-sm btn-warning">
+                                    <button type="button" class="btn btn-sm btn-warning" onclick="return verifikasiKembali({{ $t->id }})">
                                         <i class="fas fa-undo"></i> Konfirmasi Pengembalian
                                     </button>
                                     @endif
@@ -119,13 +123,52 @@
     </div><!-- /.container-fluid -->
 </section>
 <!-- /.content -->
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    });
+    function verifikasiKembali(id) {
+        if(confirm('Apakah Anda yakin ingin memverifikasi pengembalian buku ini?')) {
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Sedang memverifikasi pengembalian',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            $.ajax({
+                url: '/verifikasi-kembali/' + id,
+                type: 'PUT',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: response.message,
+                            timer: 2000
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan saat verifikasi'
+                    });
+                }
+            });
+        }
+    }
 </script>
 @endsection
