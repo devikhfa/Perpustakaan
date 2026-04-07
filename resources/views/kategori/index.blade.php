@@ -48,13 +48,13 @@
                                 <td>{{ $k->nama_kategori }}</td>
                                 <td>{{ $k->deskripsi }}</td>
                                 <td>
-                                    <a href="" class="btn btn-sm btn-secondary">show</a>
-                                    <a href="{{ route('kategori.edit', $k->id) }}" class="btn btn-sm btn-warning">edit</a>
+                                    <a href="" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> Detail</a></a>
+                                    <a href="{{ route('kategori.edit', $k->id) }}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Edit</a>
                                     <form action="{{ route('kategori.destroy', $k->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin mau hapus?')">
-                                            Hapus
+                                            <i class="fas fa-trash"></i> Hapus
                                         </button>
                                     </form>
                                 </td>
