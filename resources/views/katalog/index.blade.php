@@ -59,9 +59,14 @@
                                                 <a href="{{ route('katalog.detail', $k->id) }}" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-eye"></i> Detail
                                                 </a>
-                                                <a href="{{ route('katalog.pinjam', $k->id) }}" class="btn btn-sm btn-success">
-                                                    <i class="fas fa-book"></i> Pinjam
-                                                </a>
+                                                @php
+                                                    $role = Session::get('user_role');
+                                                @endphp
+                                                @if($role == 3)
+                                                    <a href="{{ route('katalog.pinjam', $k->id) }}" class="btn btn-sm btn-success">
+                                                        <i class="fas fa-book"></i> Pinjam
+                                                    </a>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

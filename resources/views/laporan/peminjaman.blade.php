@@ -74,7 +74,7 @@
                     <div class="icon">
                         <i class="ion ion-pie-graph"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer"> <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -87,9 +87,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Daftar Peminjaman Buku</h3>
-                        <!-- <a href="{{ route('buku.pinjam') }}" class="btn btn-sm btn-primary float-right">
-                            <i class="fas fa-plus"></i> Pinjam Buku
-                        </a> -->
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">

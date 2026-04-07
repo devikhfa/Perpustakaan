@@ -27,7 +27,7 @@
         <div class="col-12">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Quick Example</h3>
+                    <h3 class="card-title">Form Edit Buku</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
@@ -101,8 +101,8 @@
                     </div>
                     
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <a href="{{ route('buku.index') }}" class="btn btn-secondary">Kembali</a>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Submit</button>
+                        <a href="{{ route('buku.index') }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Kembali</a>
                     </div>
                 </form>
             </div>

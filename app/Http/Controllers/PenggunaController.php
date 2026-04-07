@@ -38,6 +38,7 @@ class PenggunaController extends Controller
         ]);
 
         \App\Models\Pengguna::create([
+            'role_id' => 2,
             'nama_pengguna' => $request->nama_pengguna,
             'email' => $request->email,
             'password' => bcrypt($request->password),

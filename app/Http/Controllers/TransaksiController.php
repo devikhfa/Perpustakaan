@@ -6,6 +6,7 @@ use App\Models\Transaksi;
 use App\Models\Buku;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class TransaksiController extends Controller
 {
@@ -24,10 +25,11 @@ class TransaksiController extends Controller
     }
     public function riwayatpeminjaman()
     {
+        
         $transaksi = Transaksi::join('penggunas', 'transaksis.peminjam_id', '=', 'penggunas.id')
             ->join('bukus', 'transaksis.buku_id', '=', 'bukus.id')
             ->where('transaksis.status', true)
-            ->where('transaksis.peminjam_id', 1)
+            ->where('transaksis.peminjam_id', Session::get('user_id'))
             ->select('transaksis.*', 'penggunas.nama_pengguna', 'bukus.judul')
             ->get();
         return view('transaksi.riwayatpeminjaman', compact('transaksi'));

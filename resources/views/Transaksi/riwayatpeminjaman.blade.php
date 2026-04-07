@@ -124,7 +124,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function kembalikanBuku(id) {
-        if(confirm('Apakah Anda yakin buku ini sudah dikembalikan?')) {
+        if(confirm('Apakah Anda yakin buku ingin dikembalikan?')) {
             Swal.fire({
                 title: 'Processing...',
                 text: 'Sedang memproses pengembalian buku',

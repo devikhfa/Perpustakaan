@@ -88,8 +88,8 @@
 
                         </table>
 
-                        <a href="{{ route('katalog.index') }}" class="btn btn-secondary btn-sm">
-                            Kembali
+                        <a href="{{ route('katalog.index') }}" class="btn btn-primary float-right" style="margin-right: 5px;">
+                            <i class="fas fa-arrow-left"></i> Kembali
                         </a>
                     </div>
                 </div>

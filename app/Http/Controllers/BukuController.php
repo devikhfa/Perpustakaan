@@ -6,6 +6,7 @@ use App\Models\Buku;
 use App\Models\Kategori;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class BukuController extends Controller
 {
@@ -14,6 +15,11 @@ class BukuController extends Controller
      */
     public function index()
     {
+        // Cek session untuk semua method kecuali yang ditentukan
+        if (!Session::has('user_id')) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
+        }
+        
         $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
             ->where('bukus.status', true)
             ->select('bukus.*', 'kategoris.nama_kategori as kategori')

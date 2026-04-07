@@ -20,55 +20,79 @@
   </div>
 
   <div class="card">
-    <div class="card-body register-card-body">
-      <p class="login-box-msg">Register a new membership</p>
+    <div class="card-body login-card-body">
+        <p class="login-box-msg">Daftar Akun Baru</p>
 
-      <form action="{{ route('daftar') }}" method="POST">
-        @csrf
-        <div class="input-group mb-3">
-          <input type="text" name="nama" class="form-control" placeholder="Full name">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="email" name="email" class="form-control" placeholder="Email">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Retype password">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-      </form>
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
 
-      <div class="social-auth-links text-center">
-        <a href="#" class="btn btn-block btn-primary">
-          Daftar
-        </a>
-      </div>
+        <form action="{{ route('register.proses') }}" method="post">
+            @csrf
+            <div class="input-group mb-3">
+                <input type="text" name="nama_pengguna" class="form-control @error('nama_pengguna') is-invalid @enderror" 
+                      placeholder="Nama Lengkap" value="{{ old('nama_pengguna') }}">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-user"></span>
+                    </div>
+                </div>
+                @error('nama_pengguna')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="input-group mb-3">
+                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
+                      placeholder="Email" value="{{ old('email') }}">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-envelope"></span>
+                    </div>
+                </div>
+                @error('email')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="input-group mb-3">
+                <textarea name="alamat" class="form-control @error('alamat') is-invalid @enderror" 
+                          placeholder="Alamat" rows="2">{{ old('alamat') }}</textarea>
+                @error('alamat')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="input-group mb-3">
+                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
+                       placeholder="Password">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+                @error('password')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="input-group mb-3">
+                <input type="password" name="password_confirmation" class="form-control" 
+                       placeholder="Konfirmasi Password">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-block">Daftar</button>
+                </div>
+            </div>
+        </form>
 
-       <a>Sudah punya akun?</a><a href="forgot-password.html"> Login</a>
+        <p class="mb-1 text-center mt-3">
+            <a href="{{ route('login') }}">Sudah punya akun? Login</a>
+        </p>
     </div>
-    <!-- /.form-box -->
-  </div><!-- /.card -->
+</div>
 </div>
 <!-- /.register-box -->
 

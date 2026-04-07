@@ -6,6 +6,7 @@ use App\Models\Buku;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class KatalogController extends Controller
 {
@@ -14,6 +15,10 @@ class KatalogController extends Controller
      */
     public function index()
     {
+        if (!Session::has('user_id')) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
+        }
+
         $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
             ->where('bukus.status', true)
             ->where('bukus.qty', '>', 0)
@@ -25,6 +30,10 @@ class KatalogController extends Controller
 
     public function detail(string $id)
     {
+        if (!Session::has('user_id')) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
+        }
+
         $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
             ->where('bukus.status', true)
             ->where('bukus.qty', '>', 0)
@@ -37,6 +46,9 @@ class KatalogController extends Controller
 
     public function pinjam(string $id)
     {
+        if (!Session::has('user_id')) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
+        }
         $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
             ->where('bukus.id', $id)
             ->select('bukus.*', 'kategoris.nama_kategori as kategori')

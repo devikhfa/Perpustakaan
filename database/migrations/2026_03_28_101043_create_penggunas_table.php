@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('penggunas', function (Blueprint $table) {
             $table->id();
+            $table->integer('role_id');
             $table->string('nama_pengguna');
             $table->string('email');
             $table->string('password');

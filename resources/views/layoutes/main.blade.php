@@ -126,74 +126,127 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-            <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
+                <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-            <a href="#" class="d-block">Ikhfa Risyah Aprilia</a>
+                <a href="#" class="d-block">
+                    {{ Session::get('user_nama', 'Pengguna') }}
+                </a>
+                <small>
+                    @php
+                        $role = Session::get('user_role');
+                        switch($role) {
+                            case 1:
+                                $roleText = 'Kepala Perpustakaan';
+                                $badgeColor = 'danger';
+                                break;
+                            case 2:
+                                $roleText = 'Petugas';
+                                $badgeColor = 'warning';
+                                break;
+                            case 3:
+                                $roleText = 'Anggota';
+                                $badgeColor = 'success';
+                                break;
+                            default:
+                                $roleText = 'Unknown';
+                                $badgeColor = 'secondary';
+                        }
+                    @endphp
+                    <span class="badge badge-{{ $badgeColor }}">{{ $roleText }}</span>
+                </small>
+                 <form action="{{ route('logout') }}" method="POST" class="mt-3">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-block">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
             </div>
         </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-                    with font-awesome or any other icon font library -->
+                
+                @php
+                    $role = Session::get('user_role');
+                @endphp
+
                 <li class="nav-header">Dashboard</li>
+                
+                <!-- Katalog (Semua role bisa akses) -->
                 <li class="nav-item">
-                    <a  href="{{ route('katalog.index') }}" class="nav-link">
+                    <a href="{{ route('katalog.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-box"></i>
                         <p>Katalog</p>
                     </a>
                 </li>
-                <li class="nav-header">Transaksi</li>
-                <li class="nav-item">
-                    <a href="{{ route('transaksi.datapeminjaman')}}" class="nav-link">
-                        <i class="nav-icon fas fa-book-open"></i>
-                        <p>
-                            Data Peminjaman
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('transaksi.riwayatpeminjaman')}}" class="nav-link">
-                        <i class="nav-icon fas fa-book-open"></i>
-                        <p>
-                            Riwayat Peminjaman
-                        </p>
-                    </a>
-                </li>
 
-                <li class="nav-header">Master</li>
-                <li class="nav-item">
-                    <a href="{{ route('buku.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-book"></i>
-                        <p>Buku</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('kategori.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-layer-group"></i>
-                        <p>
-                            Kategori
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('pengguna.index') }}" class="nav-link">
-                        <i class="nav-icon far fa-user"></i>
-                        <p>
-                            Pengguna
-                        </p>
-                    </a>
-                </li>
+                <!-- Menu untuk Role Kepala Perpustakaan (Role 1) -->
+                @if($role == 1)
+                    <li class="nav-header">Laporan</li>
+                    <li class="nav-item">
+                        <a href="{{ route('laporan.peminjaman')}}" class="nav-link">
+                            <i class="nav-icon fas fa-file"></i>
+                            <p>Laporan Peminjaman</p>
+                        </a>
+                    </li>
+                @endif
 
-                <li class="nav-header">Laporan</li>
-                <li class="nav-item">
-                    <a href="{{ route('laporan.peminjaman')}}" class="nav-link">
-                        <i class="nav-icon fas fa-file"></i>
-                        <p>Peminjaman</p>
-                    </a>
-                </li>
+                <!-- Menu untuk Role Petugas (Role 2) -->
+                @if($role == 2)
+                    <li class="nav-header">Transaksi</li>
+                    <li class="nav-item">
+                        <a href="{{ route('transaksi.datapeminjaman')}}" class="nav-link">
+                            <i class="nav-icon fas fa-book-open"></i>
+                            <p>Data Peminjaman</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">Master</li>
+                    <li class="nav-item">
+                        <a href="{{ route('buku.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-book"></i>
+                            <p>Buku</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('kategori.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-layer-group"></i>
+                            <p>Kategori</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('pengguna.index') }}" class="nav-link">
+                            <i class="nav-icon far fa-user"></i>
+                            <p>Pengguna</p>
+                        </a>
+                    </li>
+                @endif
+
+                <!-- Menu untuk Role Anggota (Role 3) -->
+                @if($role == 3)
+                    <li class="nav-header">Riwayat</li>
+                    <li class="nav-item">
+                        <a href="{{ route('transaksi.riwayatpeminjaman')}}" class="nav-link">
+                            <i class="nav-icon fas fa-history"></i>
+                            <p>Riwayat Peminjaman</p>
+                        </a>
+                    </li>
+                @endif
+
+                <!-- Menu untuk Role Kepala Perpustakaan & Petugas bisa akses Pengguna -->
+                @if($role == 1 || $role == 2)
+                    <!-- Menu Pengguna untuk Kepala dan Petugas -->
+                    <li class="nav-header">Manajemen</li>
+                    <li class="nav-item">
+                        <a href="{{ route('pengguna.index') }}" class="nav-link">
+                            <i class="nav-icon far fa-user"></i>
+                            <p>Pengguna</p>
+                        </a>
+                    </li>
+                @endif
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

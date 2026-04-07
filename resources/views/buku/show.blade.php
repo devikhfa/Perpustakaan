@@ -90,12 +90,12 @@
 
                         </table>
 
-                        <a href="{{ route('buku.index') }}" class="btn btn-secondary btn-sm">
-                            Kembali
+                        <a href="{{ route('buku.index') }}" class="btn btn-primary float-right" style="margin-right: 5px;">
+                            <i class="fas fa-arrow-left"></i> Kembali
                         </a>
 
-                        <a href="{{ route('buku.edit', $buku->id) }}" class="btn btn-warning btn-sm">
-                            Edit
+                        <a href="{{ route('buku.edit', $buku->id) }}" class="btn btn-success float-right" style="margin-right: 5px;">
+                            <i class="fas fa-edit"></i> Edit</a>
                         </a>
                     </div>
                 </div>

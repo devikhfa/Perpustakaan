@@ -37,8 +37,8 @@
                             <div class="col-4">
                                 <div class="form-group">
                                     <label>Peminjam <span class="text-danger">*</span></label>
-                                    <input type="text" name="nama_peminjam" class="form-control" id="nama_peminjam" value="TESTING" readonly>
-                                    <input type="hidden" name="peminjam_id" id="peminjam_id" value="1">
+                                    <input type="text" name="nama_peminjam" class="form-control" id="nama_peminjam" value="{{ Session::get('user_nama', 'Pengguna') }}" readonly>
+                                    <input type="hidden" name="peminjam_id" id="peminjam_id" value="{{ Session::get('user_id') }}">
                                     <input type="hidden" name="buku_id" value="{{ $buku->id }}">
                                     @error('peminjam_id')
                                         <small class="text-danger">{{ $message }}</small>
@@ -48,13 +48,13 @@
                             <div class="col-4">
                                 <div class="form-group">
                                     <label>Email Peminjam</label>
-                                    <input type="text" name="email_peminjam" class="form-control" id="email_peminjam" value="TESTING" readonly>
+                                    <input type="text" name="email_peminjam" class="form-control" id="email_peminjam" value="{{ Session::get('user_email', '-') }}" readonly>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label>Alamat Peminjam</label>
-                                    <input type="text" name="alamat_peminjam" class="form-control" id="alamat_peminjam" value="{{ old('alamat_peminjam', Auth::user()->alamat ?? '-') }}" readonly>
+                                    <input type="text" name="alamat_peminjam" class="form-control" id="alamat_peminjam" value="{{ Session::get('user_alamat', '-') }}" readonly>
                                 </div>
                             </div>
                         </div>
