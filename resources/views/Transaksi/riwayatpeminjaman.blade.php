@@ -94,7 +94,7 @@
                                         <i class="fas fa-undo"></i> Kembalikan
                                     </button>
                                     @endif
-                                    <button type="button" class="btn btn-sm btn-danger">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="hapusTransaksi({{ $t->id }})">
                                         <i class="fas fa-trash"></i> Hapus
                                     </button>
                                 </div>
@@ -174,22 +174,32 @@
     }
 
 function hapusTransaksi(id) {
-    if(confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
-        $.ajax({
-            url: '/transaksi/' + id,
-            type: 'DELETE',
-            data: {
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if(response.success) {
-                    location.reload();
-                } else {
-                    alert('Gagal menghapus transaksi');
+    Swal.fire({
+        title: 'Yakin?',
+        text: 'Data transaksi akan dihapus',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/transaksi/' + id,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire('Berhasil!', response.message, 'success')
+                        .then(() => location.reload());
+                    } else {
+                        Swal.fire('Gagal!', response.message, 'error');
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
+    });
 }
 </script>
 @endsection

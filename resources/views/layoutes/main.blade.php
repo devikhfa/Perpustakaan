@@ -129,7 +129,7 @@
                 <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">
+                <a href="{{ route('pengguna.profile') }}" class="d-block">
                     {{ Session::get('user_nama', 'Pengguna') }}
                 </a>
                 <small>
@@ -155,12 +155,6 @@
                     @endphp
                     <span class="badge badge-{{ $badgeColor }}">{{ $roleText }}</span>
                 </small>
-                 <form action="{{ route('logout') }}" method="POST" class="mt-3">
-                    @csrf
-                    <button type="submit" class="btn btn-danger btn-block">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </form>
             </div>
         </div>
 

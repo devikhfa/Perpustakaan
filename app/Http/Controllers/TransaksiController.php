@@ -141,4 +141,23 @@ class TransaksiController extends Controller
             ], 500);
         }
     }
+
+    public function destroy($id)
+    {
+        $transaksi = Transaksi::find($id);
+
+        if (!$transaksi) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+
+        $transaksi->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaksi berhasil dihapus'
+        ]);
+    }
 }

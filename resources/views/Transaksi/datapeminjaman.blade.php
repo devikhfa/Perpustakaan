@@ -96,7 +96,7 @@
                                         <i class="fas fa-undo"></i> Konfirmasi Pengembalian
                                     </button>
                                     @endif
-                                    <button type="button" class="btn btn-sm btn-danger">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="hapusTransaksi({{ $t->id }})">
                                         <i class="fas fa-trash"></i> Hapus
                                     </button>
                                 </div>
@@ -169,6 +169,38 @@
                 }
             });
         }
+    }
+
+    function hapusTransaksi(id) {
+        Swal.fire({
+            title: 'Yakin?',
+            text: 'Data peminjaman akan dihapus',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/transaksi/' + id,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            Swal.fire('Berhasil!', response.message, 'success')
+                            .then(() => location.reload());
+                        } else {
+                            Swal.fire('Gagal!', response.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'Terjadi kesalahan', 'error');
+                    }
+                });
+            }
+        });
     }
 </script>
 @endsection

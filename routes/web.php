@@ -26,8 +26,10 @@ route::get("/pengguna/create", [PenggunaController::class, 'create'])->name('pen
 route::post("/pengguna/store", [PenggunaController::class, 'store'])->name('pengguna.store');
 route::get('/pengguna/edit/{id}', [PenggunaController::class, 'edit'])->name('pengguna.edit');
 route::put('/pengguna/update/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
-Route::delete('/katepenggunagori/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
 route::get('/pengguna/detail/{id}', [PenggunaController::class, 'show'])->name('pengguna.detail');
+Route::get('/profile', [PenggunaController::class, 'profile'])->name('pengguna.profile');
+Route::post('/profile/update', [PenggunaController::class, 'updateProfile'])->name('pengguna.profile.update');
 
 route::get("/katalog/detail/{id}", [KatalogController::class, 'detail'])->name('katalog.detail');
 route::get("/katalog/pinjam/{id}", [KatalogController::class, 'pinjam'])->name('katalog.pinjam');
@@ -37,6 +39,7 @@ route::get("/riwayat-peminjaman", [TransaksiController::class, 'riwayatpeminjama
 route::get("/detail-transaksi/{id}", [TransaksiController::class, 'detailtransaksi'])->name('transaksi.detailtransaksi');
 Route::put('/kembalikan/{id}', [TransaksiController::class, 'kembalikan'])->name('transaksi.kembalikan');
 Route::put('/verifikasi-kembali/{id}', [TransaksiController::class, 'verifikasiKembali'])->name('transaksi.verifikasi');
+Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
 
 Route::get('/login', [AuthController::class, 'masuk'])->name('login');
 Route::get('/register', [AuthController::class, 'daftar'])->name('register');

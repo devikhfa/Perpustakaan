@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class PenggunaController extends Controller
 {
@@ -107,5 +108,41 @@ class PenggunaController extends Controller
         $pengguna->delete();
 
         return redirect()->route('pengguna.index')->with('success', 'Data berhasil dihapus');
+    }
+
+    public function profile()
+    {
+        $user = Pengguna::find(Session::get('user_id'));
+
+        return view('pengguna.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Pengguna::find(Session::get('user_id'));
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User tidak ditemukan'
+            ]);
+        }
+
+        $request->validate([
+            'nama_pengguna' => 'required|string|max:255',
+            'email' => 'required|email|unique:penggunas,email,' . $user->id,
+            'alamat' => 'nullable|string'
+        ]);
+
+        $user->update([
+            'nama_pengguna' => $request->nama_pengguna,
+            'email' => $request->email,
+            'alamat' => $request->alamat
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile berhasil diupdate'
+        ]);
     }
 }
