@@ -15,6 +15,7 @@ class Pengguna extends Model
         'email',
         'password',
         'alamat',
+        'foto',
         'status',
         'created_at',
         'updated_at'

@@ -13,7 +13,7 @@ class KatalogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!Session::has('user_id')) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
@@ -23,6 +23,12 @@ class KatalogController extends Controller
             ->where('bukus.status', true)
             ->where('bukus.qty', '>', 0)
             ->select('bukus.*', 'kategoris.nama_kategori as kategori')
+            ->when($request->search, function ($query) use ($request) {
+            $query->where(function ($q) use ($request) {
+                $q->where('bukus.judul', 'like', '%' . $request->search . '%')
+                  ->orWhere('kategoris.nama_kategori', 'like', '%' . $request->search . '%');
+            });
+        })
             ->get();
 
         return view('katalog.index', compact('buku'));

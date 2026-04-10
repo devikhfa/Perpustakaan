@@ -128,6 +128,7 @@
                         <div class="row no-print">
                             <div class="col-12">
                                 <button type="submit" class="btn btn-success float-right" {{ $buku->qty <= 0 ? 'disabled' : '' }}>
+                                <a href="{{route('transaksi.riwayatpeminjaman')}}"></a>
                                     <i class="fas fa-save"></i> Submit
                                 </button>
                                 <a href="{{ route('katalog.index') }}" class="btn btn-primary float-right" style="margin-right: 5px;">

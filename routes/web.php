@@ -30,6 +30,7 @@ Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('p
 route::get('/pengguna/detail/{id}', [PenggunaController::class, 'show'])->name('pengguna.detail');
 Route::get('/profile', [PenggunaController::class, 'profile'])->name('pengguna.profile');
 Route::post('/profile/update', [PenggunaController::class, 'updateProfile'])->name('pengguna.profile.update');
+Route::post('/profile/foto', [PenggunaController::class, 'updateFoto'])->name('pengguna.profile.foto');
 
 route::get("/katalog/detail/{id}", [KatalogController::class, 'detail'])->name('katalog.detail');
 route::get("/katalog/pinjam/{id}", [KatalogController::class, 'pinjam'])->name('katalog.pinjam');

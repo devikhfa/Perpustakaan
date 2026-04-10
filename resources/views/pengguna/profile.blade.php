@@ -147,22 +147,20 @@
     <div class="profile-header">
         <div class="profile-left">
 
-            <form action="{{ route('pengguna.update', $user->id) }}" method="POST" enctype="multipart/form-data" id="formFoto">
+            <form action="{{ route('pengguna.profile.foto') }}" method="POST" enctype="multipart/form-data" id="formFoto">
                 @csrf
-                @method('PUT')
 
                 <div class="avatar-wrapper">
 
                     @if($user->foto)
-                    <img src="{{ asset('storage/'.$user->foto) }}" class="avatar-img">
+                        <img src="{{ asset('storage/' . $user->foto) }}" class="avatar-img">
                     @else
-                    <div class="avatar-img default-avatar">
-                        {{ strtoupper(substr($user->nama_pengguna,0,1)) }}
-                    </div>
+                        <div class="avatar-img default-avatar">
+                            {{ strtoupper(substr($user->nama_pengguna ?? 'U', 0, 1)) }}
+                        </div>
                     @endif
 
-                    <input type="file" name="foto" id="inputFoto" hidden
-                        onchange="document.getElementById('formFoto').submit()">
+                    <input type="file" name="foto" id="inputFoto" hidden onchange="document.getElementById('formFoto').submit()">
 
                     <div class="ubah-foto" onclick="document.getElementById('inputFoto').click()">
                         Ubah Profil
@@ -218,15 +216,14 @@
         </div>
 
         <div class="profile-row">
-            <div class="profile-label">Password</div>
+    <div class="profile-label">Password</div>
 
-            <div id="text-password" class="profile-value" onclick="edit('password')">
-                {{ $user->password ?? '-' }}
-            </div>
+    <div id="text-password" class="profile-value" onclick="edit('password')">
+        ********
+    </div>
 
-            <input type="text" id="input-password" class="input d-none"
-                value="{{ $user->password }}">
-        </div>
+    <input type="password" id="input-password" class="input d-none" placeholder="Isi jika ingin ganti password">
+</div>
 
         <div style="display: flex; gap: 10px; margin-top: 20px;">
             <button class="btn btn-success" onclick="saveProfile()">

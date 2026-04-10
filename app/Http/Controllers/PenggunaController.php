@@ -88,6 +88,7 @@ class PenggunaController extends Controller
             'email' => $request->email,
             'alamat' => $request->alamat,
             'status' => $request->status,
+            'foto' => null 
         ]);
 
         // update password kalau diisi
@@ -96,7 +97,6 @@ class PenggunaController extends Controller
                 'password' => bcrypt($request->password)
             ]);
         }
-
         return redirect()->route('pengguna.index')->with('success', 'Data berhasil diupdate');
     }
     /**
@@ -144,5 +144,20 @@ class PenggunaController extends Controller
             'success' => true,
             'message' => 'Profile berhasil diupdate'
         ]);
+    }
+
+    public function updateFoto(Request $request)
+    {
+        $user = Pengguna::find(Session::get('user_id'));
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $path = $file->store('foto_profile', 'public');
+
+            $user->foto = $path;
+            $user->save();
+        }
+
+        return back();
     }
 }

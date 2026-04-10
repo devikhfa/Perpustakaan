@@ -126,7 +126,13 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+                @if(Session::has('user_id') && $user = \App\Models\Pengguna::find(Session::get('user_id')))
+                    @if($user->foto)
+                        <img src="{{ asset('storage/' . $user->foto) }}" class="img-circle elevation-2" style="width:45px;height:45px;object-fit:cover;" alt="User Image">
+                    @else
+                        <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" style="width:45px;height:45px;object-fit:cover;" alt="User Image">
+                    @endif
+                @endif
             </div>
             <div class="info">
                 <a href="{{ route('pengguna.profile') }}" class="d-block">

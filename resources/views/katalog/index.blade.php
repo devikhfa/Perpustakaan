@@ -16,6 +16,27 @@
     </div><!-- /.row -->
     </div><!-- /.container-fluid -->
 </div>
+<div class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-12">
+        <form action="{{ route('katalog.index') }}" method="GET" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control"
+                    placeholder="Cari judul atau kategori buku..."
+                    value="{{ request('search') }}">
+
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
 <!-- /.content-header -->
 
 <!-- Main content -->
