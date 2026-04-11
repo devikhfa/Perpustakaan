@@ -63,12 +63,15 @@
                             <td>
                                 @php
                                     $denda = 0;
+                                    // jika denda sudah tersimpan di DB
                                     if (isset($t->denda) && $t->denda > 0) {
                                         $denda = $t->denda;
                                     } else {
+                                         // kalau belum kembali & sudah lewat jatuh tempo
                                         if (!$t->tgl_dikembalikan && now()->startOfDay() > $t->tgl_jatuh_tempo->startOfDay()) {
                                             $hariTerlambat = now()->startOfDay()->diffInDays($t->tgl_jatuh_tempo->startOfDay());
                                             $denda = abs($hariTerlambat) * 2000;
+                                        // kalau sudah dikembalikan tapi telat
                                         } elseif ($t->tgl_dikembalikan && $t->tgl_dikembalikan->startOfDay() > $t->tgl_jatuh_tempo->startOfDay()) {
                                             $hariTerlambat = $t->tgl_dikembalikan->startOfDay()->diffInDays($t->tgl_jatuh_tempo->startOfDay());
                                             $denda = abs($hariTerlambat) * 2000;

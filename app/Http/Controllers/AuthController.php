@@ -12,30 +12,36 @@ class AuthController extends Controller
     // Menampilkan halaman login
     public function masuk()
     {
-        // Jika sudah login, redirect ke dashboard
+         // Jika sudah login, redirect ke dashboard
         if (Session::has('user_id')) {
+            // Jika sudah login, redirect ke halaman katalog
             return redirect()->route('katalog.index');
         }
+
+        // Jika belum login, tampilkan halaman login
         return view('auth.masuk');
     }
 
-    // Menampilkan halaman daftar
+    // Menampilkan halaman daftar (register)
     public function daftar()
     {
-        // Jika sudah login, redirect ke dashboard
+        // Mengecek apakah user sudah login
         if (Session::has('user_id')) {
+            // Jika sudah login, redirect ke katalog
             return redirect()->route('katalog.index');
         }
+
+        // Jika belum login, tampilkan halaman register
         return view('auth.daftar');
     }
 
     // Proses login
     public function login(Request $request)
     {
-        // Validasi input
+        // Validasi input dari form login
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:4'
+            'email' => 'required|email', // email wajib & harus format email
+            'password' => 'required|min:4' // password minimal 4 karakter
         ], [
             'email.required' => 'Email wajib diisi',
             'email.email' => 'Format email tidak valid',
@@ -48,6 +54,7 @@ class AuthController extends Controller
 
         // Cek user dan password
         if ($user && Hash::check($request->password, $user->password)) {
+
             // Cek status user (misal: 1 = aktif, 0 = nonaktif)
             if ($user->status != 1) {
                 return redirect()->back()
@@ -55,7 +62,7 @@ class AuthController extends Controller
                     ->withInput();
             }
 
-            // Buat session
+            // Menyimpan data user ke dalam session
             Session::put('user_id', $user->id);
             Session::put('user_nama', $user->nama_pengguna);
             Session::put('user_email', $user->email);
@@ -74,16 +81,16 @@ class AuthController extends Controller
             return redirect()->route('katalog.index')->with('success', 'Selamat datang, ' . $user->nama_pengguna . '!');
         }
 
-        // Jika login gagal
+        // Jika login gagal (email/password salah)
         return redirect()->back()
             ->with('error', 'Email atau password salah!')
             ->withInput();
     }
 
-    // Proses registrasi
+    // Proses registrasi user baru
     public function register(Request $request)
     {
-        // Validasi input
+        // Validasi input form registrasi
         $request->validate([
             'nama_pengguna' => 'required|string|max:100',
             'email' => 'required|email|unique:penggunas,email',
@@ -99,14 +106,14 @@ class AuthController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak sesuai'
         ]);
 
-        // Buat user baru
+        // Menyimpan user baru ke database
         $user = Pengguna::create([
-            'role_id' => 3,
+            'role_id' => 3, // default role (misal: user biasa)
             'nama_pengguna' => $request->nama_pengguna,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->password), // password di-hash
             'alamat' => $request->alamat,
-            'status' => true
+            'status' => true // status aktif
         ]);
 
         // Auto login setelah registrasi
@@ -125,13 +132,12 @@ class AuthController extends Controller
     // Proses logout
     public function logout(Request $request)
     {
-        // Hapus semua session
+        // Menghapus semua data session
         Session::flush();
         
-        // Hapus session laravel
+        // Menghapus session Laravel & regenerate token untuk keamanan
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
         return redirect()->route('login')->with('success', 'Anda telah logout.');
     }
 
@@ -141,7 +147,7 @@ class AuthController extends Controller
         return Session::has('user_id');
     }
 
-    // Mendapatkan data user yang sedang login
+    // Fungsi untuk mengambil data user yang sedang login
     public static function getUser()
     {
         if (Session::has('user_id')) {
@@ -153,6 +159,8 @@ class AuthController extends Controller
                 'status' => Session::get('user_status')
             ];
         }
+
+        // Jika tidak login, return null
         return null;
     }
 }

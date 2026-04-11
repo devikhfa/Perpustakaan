@@ -46,6 +46,7 @@
                             <label>Kategori</label>
                             <select name="kategori_id" class="form-control" id="kategori_id" required>
                                 <option value="">-- Pilih Kategori --</option>
+                                 <!-- looping data kategori dari controller -->
                                 @foreach($kategoris as $kategori)
                                     <option value="{{ $kategori->id }}" {{ old('kategori_id') == $kategori->id ? 'selected' : '' }}>
                                         {{ $kategori->nama_kategori }}

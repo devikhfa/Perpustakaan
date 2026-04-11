@@ -11,40 +11,45 @@ use Illuminate\Support\Facades\Session;
 class BukuController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan semua data buku
      */
     public function index()
     {
-        // Cek session untuk semua method kecuali yang ditentukan
+        // Cek apakah user sudah login
         if (!Session::has('user_id')) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
+            return redirect()->route('login')
+                ->with('error', 'Silakan login terlebih dahulu!');
         }
         
+        // Mengambil data buku yang masih aktif (status = true)
+        // sekaligus join dengan tabel kategori
         $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
             ->where('bukus.status', true)
             ->select('bukus.*', 'kategoris.nama_kategori as kategori')
             ->get();
 
+        // Kirim data ke view
         return view('buku.index', compact('buku'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form tambah buku
      */
     public function create()
     {
+        // Ambil semua kategori yang aktif
         $kategoris = Kategori::where('status', true) 
                             ->orderBy('nama_kategori')
                             ->get();
-        
         return view('buku.create', compact('kategoris'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan data buku baru ke database
      */
     public function store(Request $request)
     {
+        // Validasi input form tambah buku
         $request->validate([
             'kategori_id' => 'required',
             'judul' => 'required|max:100',
@@ -55,15 +60,16 @@ class BukuController extends Controller
             'sampul' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
 
-        // upload sampul
+        // Proses upload file sampul buku
         if ($request->hasFile('sampul')) {
             $fileName = 'sampul-' . uniqid() . '.' . $request->sampul->extension();
             $request->sampul->move(public_path('image'), $fileName);
         } else {
+            // jika tidak upload gambar, pakai default
             $fileName = 'nophoto.jpg';
         }
 
-        // simpan ke database
+        // Simpan data ke database menggunakan Query Builder
         DB::table('bukus')->insert([
             'kategori_id' => $request->kategori_id,
             'judul' => $request->judul,
@@ -77,41 +83,49 @@ class BukuController extends Controller
             'updated_at' => now(),
         ]);
         
-        // Redirect dengan pesan sukses
-        return redirect()->route('buku.index')->with('success', 'Data buku berhasil ditambahkan!');
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('buku.index')
+            ->with('success', 'Data buku berhasil ditambahkan!');
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan detail satu buku
      */
     public function show(string $id)
     {
+        // Ambil data buku berdasarkan ID + join kategori
         $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
             ->where('bukus.id', $id)
             ->select('bukus.*', 'kategoris.nama_kategori as kategori')
             ->firstOrFail();
             
+        // Kirim ke view detail
         return view('buku.show', compact('buku'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Menampilkan form edit buku
      */
     public function edit(string $id)
     {
+        // Ambil data buku berdasarkan ID
         $buku = Buku::findOrFail($id);
+
+        // Ambil semua kategori aktif untuk dropdown
         $kategoris = Kategori::where('status', true)
                             ->orderBy('nama_kategori')
                             ->get();
         
+        // Kirim ke view edit
         return view('buku.edit', compact('buku', 'kategoris'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update data buku
      */
     public function update(Request $request, $id)
     {
+        // Validasi input update
         $request->validate([
             'kategori_id' => 'required',
             'judul' => 'required|max:100',
@@ -122,18 +136,19 @@ class BukuController extends Controller
             'sampul' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
 
+        // Cari data buku
         $buku = Buku::findOrFail($id);
 
-        // upload sampul baru (kalau ada)
+        // Jika ada upload sampul baru
         if ($request->hasFile('sampul')) {
             $fileName = 'sampul-' . uniqid() . '.' . $request->sampul->extension();
             $request->sampul->move(public_path('image'), $fileName);
 
-            // update nama file
+            // update field sampul
             $buku->sampul = $fileName;
         }
 
-        // update data lain
+        // Update data buku lainnya
         $buku->kategori_id = $request->kategori_id;
         $buku->judul = $request->judul;
         $buku->penulis = $request->penulis;
@@ -142,32 +157,29 @@ class BukuController extends Controller
         $buku->qty = $request->qty;
         $buku->updated_at = now();
 
+        // simpan perubahan
         $buku->save();
 
-        return redirect()->route('buku.index')->with('success', 'Data berhasil diupdate');
+        return redirect()->route('buku.index')
+            ->with('success', 'Data berhasil diupdate');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Hapus data buku (soft delete manual)
      */
     public function destroy(string $id)
     {
-        // $buku = Buku::findOrFail($id);
-        // if ($buku->sampul && $buku->sampul != 'nophoto.jpg') {
-        //     $path = public_path('image/' . $buku->sampul);
-        //     if (file_exists($path)) {
-        //         unlink($path);
-        //     }
-        // }
-
-        // $buku->delete();
+        // Ambil data buku
         $buku = Buku::findOrFail($id);
 
+        // Soft delete manual: ubah status jadi false (tidak dihapus permanen)
         $buku->status = false;
         $buku->updated_at = now();
 
+        // simpan perubahan
         $buku->save();
 
-        return redirect()->route('buku.index')->with('success', 'Data berhasil dihapus');
+        return redirect()->route('buku.index')
+            ->with('success', 'Data berhasil dihapus');
     }
 }

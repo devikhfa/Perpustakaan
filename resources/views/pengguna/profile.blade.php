@@ -216,14 +216,14 @@
         </div>
 
         <div class="profile-row">
-    <div class="profile-label">Password</div>
+            <div class="profile-label">Password</div>
 
-    <div id="text-password" class="profile-value" onclick="edit('password')">
-        ********
-    </div>
+            <div id="text-password" class="profile-value" onclick="edit('password')">
+                ********
+            </div>
 
-    <input type="password" id="input-password" class="input d-none" placeholder="Isi jika ingin ganti password">
-</div>
+            <input type="password" id="input-password" class="input d-none" placeholder="Isi jika ingin ganti password">
+        </div>
 
         <div style="display: flex; gap: 10px; margin-top: 20px;">
             <button class="btn btn-success" onclick="saveProfile()">
@@ -249,28 +249,34 @@
         document.getElementById('input-' + field).focus();
     }
 
-    function saveProfile() {
-        fetch('{{ route("pengguna.profile.update") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    nama_pengguna: document.getElementById('input-nama').value,
-                    email: document.getElementById('input-email').value,
-                    alamat: document.getElementById('input-alamat').value
-                })
-            })
-            .then(r => r.json())
-            .then(res => {
-                if (res.success) {
-                    location.reload();
-                } else {
-                    alert(res.message);
-                }
-            });
-    }
+function saveProfile() {
+    fetch('{{ route("pengguna.profile.update") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            nama_pengguna: document.getElementById('input-nama').value,
+            email: document.getElementById('input-email').value,
+            alamat: document.getElementById('input-alamat').value,
+            password: document.getElementById('input-password').value
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+            alert(res.message);
+            location.reload();
+        } else {
+            alert(res.message);
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        alert("Terjadi error");
+    });
+}
 </script>
 
 @endsection

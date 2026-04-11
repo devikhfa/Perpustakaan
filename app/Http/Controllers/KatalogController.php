@@ -11,35 +11,45 @@ use Illuminate\Support\Facades\Session;
 class KatalogController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar katalog buku
      */
     public function index(Request $request)
     {
+        // Cek apakah user sudah login
         if (!Session::has('user_id')) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
+            return redirect()->route('login')
+                ->with('error', 'Silakan login terlebih dahulu!');
         }
 
+        // Ambil data buku yang tersedia (aktif & stok > 0)
         $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
             ->where('bukus.status', true)
             ->where('bukus.qty', '>', 0)
             ->select('bukus.*', 'kategoris.nama_kategori as kategori')
+
+            // fitur search (pencarian judul atau kategori)
             ->when($request->search, function ($query) use ($request) {
-            $query->where(function ($q) use ($request) {
-                $q->where('bukus.judul', 'like', '%' . $request->search . '%')
-                  ->orWhere('kategoris.nama_kategori', 'like', '%' . $request->search . '%');
-            });
-        })
+                $query->where(function ($q) use ($request) {
+                    $q->where('bukus.judul', 'like', '%' . $request->search . '%')
+                      ->orWhere('kategoris.nama_kategori', 'like', '%' . $request->search . '%');
+                });
+            })
             ->get();
 
         return view('katalog.index', compact('buku'));
     }
 
+    /**
+     * Menampilkan detail buku
+     */
     public function detail(string $id)
     {
+        // Cek login
         if (!Session::has('user_id')) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
         }
 
+        // Ambil detail buku berdasarkan ID
         $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
             ->where('bukus.status', true)
             ->where('bukus.qty', '>', 0)
@@ -50,11 +60,17 @@ class KatalogController extends Controller
         return view('katalog.detail', compact('buku'));
     }
 
+    /**
+     * Halaman form peminjaman buku
+     */
     public function pinjam(string $id)
     {
+        // Cek login user
         if (!Session::has('user_id')) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
         }
+
+        // Ambil data buku untuk dipinjam
         $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
             ->where('bukus.id', $id)
             ->select('bukus.*', 'kategoris.nama_kategori as kategori')
@@ -63,8 +79,12 @@ class KatalogController extends Controller
         return view('katalog.pinjam', compact('buku'));
     }
 
+    /**
+     * Proses transaksi peminjaman buku
+     */
     public function store(Request $request)
     {
+        // Validasi input transaksi
         $request->validate([
             'peminjam_id' => 'required|exists:penggunas,id',
             'buku_id' => 'required|exists:bukus,id',
@@ -82,37 +102,46 @@ class KatalogController extends Controller
             'tgl_jatuh_tempo.date' => 'Format tanggal jatuh tempo tidak valid',
             'tgl_jatuh_tempo.after_or_equal' => 'Tanggal jatuh tempo harus setelah atau sama dengan tanggal pinjam',
         ]);
-        
         try {
+            // mulai transaksi database (biar aman dari error)
             DB::beginTransaction();
             
-            $buku = Buku::where('id', $request->buku_id)->lockForUpdate()->first();
+            // lock data buku supaya aman dari double booking
+            $buku = Buku::where('id', $request->buku_id)
+                ->lockForUpdate()
+                ->first();
 
+            // cek stok buku
             if ($buku->qty <= 0) {
                 throw new \Exception('Stok buku tidak mencukupi!');
             }
+
+            // simpan data transaksi peminjaman
             $transaksi = Transaksi::create([
                 'peminjam_id' => $request->peminjam_id,
                 'buku_id' => $request->buku_id,
                 'tgl_pinjam' => $request->tgl_pinjam,
                 'tgl_jatuh_tempo' => $request->tgl_jatuh_tempo,
                 'catatan' => $request->catatan,
-                'status_transaksi' => 1,
+                'status_transaksi' => 1, // 1 = dipinjam
                 'status' => true,
-                // 'created_by' => Auth::id(),
-                // 'updated_by' => Auth::id(),
+
+                // tracking user (sementara hardcode admin/user id 1)
                 'created_by' => 1,
                 'created_at' => now()
             ]);
             
+            // kurangi stok buku setelah dipinjam
             $buku->decrement('qty');
             
+            // commit transaksi jika semua sukses
             DB::commit();
             
             return redirect()->route('katalog.index')
                 ->with('success', 'Transaksi berhasil dibuat! Buku berhasil dipinjam.');
                 
         } catch (\Exception $e) {
+            // rollback jika terjadi error
             DB::rollBack();
             
             return redirect()->back()

@@ -33,11 +33,14 @@
 
                     <div class="card-body text-center">
 
+                        <!-- cek apakah sampul kosong -->
                         @if(empty($buku->sampul))
+                            <!-- default image -->
                             <img src="{{ url('image/nophoto.jpg') }}"
                                 class="img-fluid rounded"
                                 style="max-height: 300px;">
                         @else
+                             <!-- gambar dari database -->
                             <img src="{{ url('image/'.$buku->sampul) }}"
                                 class="img-fluid rounded"
                                 style="max-height: 300px;">

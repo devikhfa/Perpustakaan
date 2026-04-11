@@ -14,7 +14,10 @@ class Kategori extends Model
         'created_at',
         'updated_at'
     ];
-
+        /**
+        * Relasi: Kategori memiliki banyak buku
+        * (One Category has Many Books)
+        */
     public function buku()
     {
         return $this->hasMany(Buku::class, 'kategori_id');

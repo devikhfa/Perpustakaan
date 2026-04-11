@@ -22,18 +22,28 @@ class Transaksi extends Model
         'created_by',
         'updated_by'
     ];
-    
+
+    /**
+     * Casting tipe data agar otomatis dikonversi Laravel
+     */
     protected $casts = [
         'tgl_pinjam' => 'datetime',
         'tgl_jatuh_tempo' => 'datetime',
         'tgl_dikembalikan' => 'datetime',
         'denda' => 'integer',
     ];
-    
+
+    /**
+     * Konstanta status transaksi (biar tidak pakai angka langsung)
+     */
     const STATUS_DIPINJAM = 1;
     const STATUS_MENUNGGU_VERIFIKASI = 2;
     const STATUS_SELESAI = 3;
 
+    /**
+     * Mengubah status angka menjadi teks
+     * Contoh: 1 → Dipinjam
+     */
     public function getStatusTextAttribute()
     {
         return match($this->status_transaksi) {
@@ -44,6 +54,9 @@ class Transaksi extends Model
         };
     }
 
+    /**
+     * Mengubah status menjadi badge HTML (untuk UI)
+     */
     public function getStatusBadgeAttribute()
     {
         return match($this->status_transaksi) {
@@ -53,22 +66,34 @@ class Transaksi extends Model
             default => '<span class="badge badge-secondary">Unknown</span>'
         };
     }
-    
+
+    /**
+     * Relasi: transaksi milik user (peminjam)
+     */
     public function peminjam()
     {
         return $this->belongsTo(Pengguna::class, 'peminjam_id', 'id');
     }
-    
+
+    /**
+     * Relasi: transaksi milik buku
+     */
     public function buku()
     {
         return $this->belongsTo(Buku::class, 'buku_id', 'id');
     }
-    
+
+    /**
+     * Relasi: user yang membuat data transaksi
+     */
     public function createdBy()
     {
         return $this->belongsTo(Pengguna::class, 'created_by', 'id');
     }
-    
+
+    /**
+     * Relasi: user yang mengupdate data transaksi
+     */
     public function updatedBy()
     {
         return $this->belongsTo(Pengguna::class, 'updated_by', 'id');

@@ -60,7 +60,7 @@
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer"><i class="fas fa"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -74,7 +74,7 @@
                     <div class="icon">
                         <i class="ion ion-pie-graph"></i>
                     </div>
-                    <a href="#" class="small-box-footer"> <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer"> <i class="fas fa"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -119,6 +119,7 @@
                                             <span class="badge badge-warning">Belum Kembali</span>
                                         @endif
                                     </td>
+                                    <!-- hitung keterlambatan -->
                                     <td>
                                         @php
                                             $hariTerlambat = 0;
@@ -133,11 +134,12 @@
                                             <span class="text-success">-</span>
                                         @endif
                                     </td>
+                                    <!-- hitung denda -->
                                     <td>
                                         @php
                                             $denda = $t->denda ?? 0;
                                             if ($denda == 0 && $hariTerlambat > 0) {
-                                                $denda = $hariTerlambat * 2000;
+                                                $denda = $hariTerlambat * 3000;
                                             }
                                         @endphp
                                         @if($denda > 0)
@@ -148,6 +150,7 @@
                                             Rp 0
                                         @endif
                                     </td>
+                                    <!-- status transaksi -->
                                     <td>
                                         @php
                                             $status = $t->status_transaksi;

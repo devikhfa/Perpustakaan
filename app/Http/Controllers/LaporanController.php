@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class LaporanController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan laporan peminjaman buku
      */
     public function peminjaman()
     {
@@ -19,6 +19,8 @@ class LaporanController extends Controller
         $transaksis = Transaksi::join('penggunas', 'transaksis.peminjam_id', '=', 'penggunas.id')
             ->join('bukus', 'transaksis.buku_id', '=', 'bukus.id')
             ->where('transaksis.status', true)
+
+            // ambil data yang diperlukan saja
             ->select(
                 'transaksis.*', 
                 'penggunas.nama_pengguna', 
@@ -26,15 +28,24 @@ class LaporanController extends Controller
                 'penggunas.alamat',
                 'bukus.judul'
             )
+
+            // urutkan dari data terbaru
             ->orderBy('transaksis.created_at', 'desc')
             ->get();
         
-        // Hitung statistik untuk dashboard
-        $totalBuku = Buku::count();
-        $totalAnggota = Pengguna::count();
-        $totalPinjaman = Transaksi::where('status', true)->count();
-        $totalDenda = Transaksi::sum('denda');
+        // Statistik untuk ditampilkan di laporan/dashboard
+        $totalBuku = Buku::count(); // total semua buku
+        $totalAnggota = Pengguna::count(); // total user/anggota
+        $totalPinjaman = Transaksi::where('status', true)->count(); // total transaksi aktif
+        $totalDenda = Transaksi::sum('denda'); // total denda keseluruhan
         
-        return view('laporan.peminjaman', compact('transaksis', 'totalBuku', 'totalAnggota', 'totalPinjaman', 'totalDenda'));
+        // Kirim semua data ke view laporan
+        return view('laporan.peminjaman', compact(
+            'transaksis',
+            'totalBuku',
+            'totalAnggota',
+            'totalPinjaman',
+            'totalDenda'
+        ));
     }
 }

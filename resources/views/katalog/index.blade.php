@@ -83,6 +83,7 @@
                                                 @php
                                                     $role = Session::get('user_role');
                                                 @endphp
+                                                 <!-- hanya user role 3 yang bisa pinjam -->
                                                 @if($role == 3)
                                                     <a href="{{ route('katalog.pinjam', $k->id) }}" class="btn btn-sm btn-success">
                                                         <i class="fas fa-book"></i> Pinjam

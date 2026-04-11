@@ -9,7 +9,7 @@ class Buku extends Model
     use HasFactory;
     
     protected $fillable = [
-        'id_kategori',
+        'kategori_id',
         'judul',
         'penulis',
         'penerbit',
@@ -21,6 +21,10 @@ class Buku extends Model
         'updated_at'
     ];
     
+     /**
+     * Relasi: Buku milik satu kategori
+     * (Many Books belong to One Category)
+     */
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');

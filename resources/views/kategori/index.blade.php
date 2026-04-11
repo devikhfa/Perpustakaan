@@ -48,7 +48,7 @@
                                 <td>{{ $k->nama_kategori }}</td>
                                 <td>{{ $k->deskripsi }}</td>
                                 <td>
-                                    <a href="" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> Detail</a></a>
+                                    <a href="{{ route('kategori.detail', $k->id) }}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> Detail</a></a>
                                     <a href="{{ route('kategori.edit', $k->id) }}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Edit</a>
                                     <form action="{{ route('kategori.destroy', $k->id) }}" method="POST" style="display:inline;">
                                         @csrf

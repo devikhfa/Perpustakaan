@@ -47,6 +47,7 @@
                             <label>Kategori <span class="text-danger">*</span></label>
                             <select name="kategori_id" class="form-control @error('kategori_id') is-invalid @enderror" id="kategori_id" required>
                                 <option value="">-- Pilih Kategori --</option>
+                                 <!-- looping kategori -->
                                 @foreach($kategoris as $kategori)
                                     <option value="{{ $kategori->id }}" 
                                         {{ old('kategori_id', $buku->kategori_id) == $kategori->id ? 'selected' : '' }}>

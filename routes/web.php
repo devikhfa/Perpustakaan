@@ -21,6 +21,7 @@ route::post("/kategori/store", [KategoriController::class, 'store'])->name('kate
 route::get('/kategori/edit/{id}', [KategoriController::class, 'edit'])->name('kategori.edit');
 route::put('/kategori/update/{id}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+Route::get('/kategori/{id}', [KategoriController::class, 'show'])->name('kategori.detail');
 
 route::get("/pengguna/create", [PenggunaController::class, 'create'])->name('pengguna.create');
 route::post("/pengguna/store", [PenggunaController::class, 'store'])->name('pengguna.store');
