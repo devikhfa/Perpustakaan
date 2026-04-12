@@ -3,202 +3,195 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Perpustakaan Daftar</title>
+  <title>Register Perpustakaan</title>
+
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
-      display: flex;
-      background: #0f1b3d;
-    }
 
-    .left-panel {
-      flex: 1;
+      /* background image */
+      background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1200') center/cover no-repeat;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
       position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 48px;
-      overflow: hidden;
-      min-height: 100vh;
     }
 
-    .left-panel::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=900&auto=format&fit=crop&q=80');
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.3);
-    z-index: 0;
-    }
-
-    .left-panel::after {
+    /* dark overlay */
+    body::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(10,20,50,0.95) 0%, rgba(10,20,50,0.3) 60%, transparent 100%);
+      background: rgba(0,0,0,0.55);
+    }
+
+    /* CARD */
+    .register-card {
+      position: relative;
       z-index: 1;
-    }
 
-    .left-content { position: relative; z-index: 2; }
+      width: 620px;
+      max-width: 92%;
 
-    .brand {
-      position: absolute;
-      top: 48px; left: 48px;
-      z-index: 2;
-      font-size: 22px;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: 1px;
-      text-decoration: none;
-    }
-    .brand span { color: #4e8ff8; }
-
-    .left-tagline { font-size: 34px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 14px; letter-spacing: -0.5px; }
-    .left-tagline span { color: #4e8ff8; }
-    .left-desc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 360px; margin-bottom: 32px; }
-
-    .step-list { display: flex; flex-direction: column; gap: 14px; }
-    .step-item { display: flex; align-items: flex-start; gap: 12px; }
-    .step-num {
-      width: 28px; height: 28px;
-      background: #2f6df6;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 800; color: #fff;
-      flex-shrink: 0;
-    }
-    .step-text { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; padding-top: 4px; }
-
-    .right-panel {
-      width: 500px;
-      min-height: 100vh;
       background: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 48px;
-      flex-shrink: 0;
+      border-radius: 16px;
+      padding: 42px 40px;
+
+      box-shadow: 0 25px 70px rgba(0,0,0,0.35);
     }
 
-    .form-header { margin-bottom: 28px; }
-    .form-header .welcome { font-size: 13px; font-weight: 600; color: #4e8ff8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .form-header h2 { font-size: 24px; font-weight: 800; color: #111827; margin-bottom: 6px; letter-spacing: -0.3px; }
-    .form-header p { font-size: 13px; color: #6b7280; }
+    .welcome {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4e8ff8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
 
-    .form-group { margin-bottom: 16px; }
-    .form-label { display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+    h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 6px;
+    }
 
-    .input-wrap { position: relative; }
+    p {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 22px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
     .input-wrap i {
-      position: absolute; left: 14px; top: 50%;
+      position: absolute;
+      left: 12px;
+      top: 50%;
       transform: translateY(-50%);
-      color: #9ca3af; font-size: 15px; pointer-events: none;
+      color: #9ca3af;
     }
 
-    .form-input {
+    input, textarea {
       width: 100%;
-      padding: 11px 14px 11px 40px;
+      padding: 11px 12px 11px 38px;
       border: 1.5px solid #e5e7eb;
       border-radius: 10px;
-      font-size: 13.5px;
-      font-family: inherit;
-      color: #111827;
       background: #fafafa;
+      font-size: 13px;
       outline: none;
-      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+      font-family: inherit;
     }
-    .form-input:focus { border-color: #4e8ff8; background: #fff; box-shadow: 0 0 0 3px rgba(78,143,248,0.12); }
-    .form-input.is-invalid { border-color: #ef4444; }
 
-    textarea.form-input { padding-top: 11px; resize: none; }
+    textarea {
+      resize: none;
+      padding-top: 10px;
+    }
 
-    .invalid-feedback { display: block; font-size: 12px; color: #ef4444; margin-top: 5px; }
+    input:focus, textarea:focus {
+      border-color: #4e8ff8;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(78,143,248,0.15);
+    }
 
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
 
-    .btn-submit {
+    .btn {
       width: 100%;
       padding: 12px;
+      margin-top: 10px;
+
       background: #2f6df6;
-      color: #fff;
+      color: white;
       border: none;
       border-radius: 10px;
-      font-size: 14px;
+
       font-weight: 700;
-      font-family: inherit;
       cursor: pointer;
-      transition: background 0.18s, transform 0.1s;
-      margin-top: 8px;
     }
-    .btn-submit:hover { background: #1a5ce6; }
-    .btn-submit:active { transform: scale(0.99); }
 
-    .alert-box {
-      border-radius: 10px;
-      padding: 10px 14px;
+    .btn:hover {
+      background: #1a5ce6;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 18px;
       font-size: 13px;
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      color: #6b7280;
     }
-    .alert-danger { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
 
-    .divider { height: 1px; background: #f3f4f6; margin: 22px 0; }
+    .footer a {
+      color: #2f6df6;
+      font-weight: 600;
+      text-decoration: none;
+    }
 
-    .form-footer { text-align: center; font-size: 13px; color: #6b7280; }
-    .form-footer a { color: #2f6df6; font-weight: 600; text-decoration: none; }
-    .form-footer a:hover { text-decoration: underline; }
+    .footer a:hover {
+      text-decoration: underline;
+    }
 
+    .alert {
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .danger {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    /* responsive */
     @media (max-width: 768px) {
-      .left-panel { display: none; }
-      .right-panel { width: 100%; padding: 36px 24px; }
-      .form-row { grid-template-columns: 1fr; }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
 
-{{-- LEFT PANEL --}}
-<div class="left-panel">
-  <div class="left-content">
-    <div class="left-tagline">Mulai Perjalanan<br><span>Membacamu</span> Sekarang</div>
-    <p class="left-desc">Daftar dan nikmati kemudahan meminjam buku dari perpustakaan SMKN 3 Banjar kapan saja.</p>
-    <div class="step-list">
-      <div class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-text">Isi formulir pendaftaran dengan data diri kamu</div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-text">Akun langsung aktif setelah pendaftaran</div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-text">Mulai pinjam buku favorit kamu!</div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="register-card">
 
-{{-- RIGHT PANEL --}}
-<div class="right-panel">
-  <div class="form-header">
-    <div class="welcome">Buat Akun Baru</div>
-    <h2>Daftar ke LibTrack</h2>
-    <p>Lengkapi data di bawah untuk membuat akun.</p>
-  </div>
+  <div class="welcome">Buat Akun Baru</div>
+  <h2>Daftar</h2>
+  <p>Isi data berikut untuk membuat akun perpustakaan.</p>
 
   @if(session('error'))
-    <div class="alert-box alert-danger">
-      <i class="bi bi-exclamation-circle-fill"></i>
+    <div class="alert danger">
       {{ session('error') }}
     </div>
   @endif
@@ -207,79 +200,54 @@
     @csrf
 
     <div class="form-group">
-      <label class="form-label">Nama Lengkap</label>
+      <label>Nama Lengkap</label>
       <div class="input-wrap">
         <i class="bi bi-person"></i>
-        <input type="text" name="nama_pengguna"
-               class="form-input @error('nama_pengguna') is-invalid @enderror"
-               placeholder="Masukkan nama lengkap"
-               value="{{ old('nama_pengguna') }}">
+        <input type="text" name="nama_pengguna" value="{{ old('nama_pengguna') }}">
       </div>
-      @error('nama_pengguna')
-        <span class="invalid-feedback">{{ $message }}</span>
-      @enderror
     </div>
 
     <div class="form-group">
-      <label class="form-label">Alamat Email</label>
+      <label>Email</label>
       <div class="input-wrap">
         <i class="bi bi-envelope"></i>
-        <input type="email" name="email"
-               class="form-input @error('email') is-invalid @enderror"
-               placeholder="contoh@email.com"
-               value="{{ old('email') }}">
+        <input type="email" name="email" value="{{ old('email') }}">
       </div>
-      @error('email')
-        <span class="invalid-feedback">{{ $message }}</span>
-      @enderror
     </div>
 
     <div class="form-group">
-      <label class="form-label">Alamat</label>
+      <label>Alamat</label>
       <div class="input-wrap">
-        <i class="bi bi-geo-alt" style="top: 14px; transform: none;"></i>
-        <textarea name="alamat" rows="2"
-                  class="form-input @error('alamat') is-invalid @enderror"
-                  placeholder="Masukkan alamat lengkap">{{ old('alamat') }}</textarea>
+        <i class="bi bi-geo-alt"></i>
+        <textarea name="alamat" rows="2">{{ old('alamat') }}</textarea>
       </div>
-      @error('alamat')
-        <span class="invalid-feedback">{{ $message }}</span>
-      @enderror
     </div>
 
     <div class="form-row">
-      <div class="form-group" style="margin-bottom:0;">
-        <label class="form-label">Password</label>
+      <div class="form-group">
+        <label>Password</label>
         <div class="input-wrap">
           <i class="bi bi-lock"></i>
-          <input type="password" name="password"
-                 class="form-input @error('password') is-invalid @enderror"
-                 placeholder="Min. 6 karakter">
+          <input type="password" name="password">
         </div>
-        @error('password')
-          <span class="invalid-feedback">{{ $message }}</span>
-        @enderror
       </div>
 
-      <div class="form-group" style="margin-bottom:0;">
-        <label class="form-label">Konfirmasi Password</label>
+      <div class="form-group">
+        <label>Konfirmasi</label>
         <div class="input-wrap">
           <i class="bi bi-lock-fill"></i>
-          <input type="password" name="password_confirmation"
-                 class="form-input"
-                 placeholder="Ulangi password">
+          <input type="password" name="password_confirmation">
         </div>
       </div>
     </div>
 
-    <button type="submit" class="btn-submit">Buat Akun</button>
+    <button class="btn" type="submit">Daftar</button>
   </form>
 
-  <div class="divider"></div>
-
-  <div class="form-footer">
-    Sudah punya akun? <a href="{{ route('login') }}">Masuk di sini</a>
+  <div class="footer">
+    Sudah punya akun? <a href="{{ route('login') }}">Masuk</a>
   </div>
+
 </div>
 
 </body>

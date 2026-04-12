@@ -35,7 +35,8 @@ class LaporanController extends Controller
         
         // Statistik untuk ditampilkan di laporan/dashboard
         $totalBuku = Buku::count(); // total semua buku
-        $totalAnggota = Pengguna::count(); // total user/anggota
+        $totalPetugas = Pengguna::where('role_id', 2)->count();
+        $totalAnggota = Pengguna::where('role_id', 3)->count();
         $totalPinjaman = Transaksi::where('status', true)->count(); // total transaksi aktif
         $totalDenda = Transaksi::sum('denda'); // total denda keseluruhan
         
@@ -43,6 +44,7 @@ class LaporanController extends Controller
         return view('laporan.peminjaman', compact(
             'transaksis',
             'totalBuku',
+            'totalPetugas',
             'totalAnggota',
             'totalPinjaman',
             'totalDenda'

@@ -27,7 +27,7 @@
                 <div class="small-box bg-info">
                     <div class="inner">
                         <h3>{{ $totalBuku ?? 0 }}</h3>
-                        <p>Buku</p>
+                        <p>Total Buku</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-bag"></i>
@@ -40,8 +40,8 @@
                 <!-- small box -->
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>{{ $totalAnggota ?? 0 }}</h3>
-                        <p>Anggota</p>
+                        <h3>{{ $totalPetugas ?? 0 }}</h3>
+                        <p>Total Petugas</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person-add"></i>
@@ -55,7 +55,7 @@
                 <div class="small-box bg-success">
                     <div class="inner">
                         <h3>{{ $totalPinjaman ?? 0 }}</h3>
-                        <p>Pinjaman Aktif</p>
+                        <p>Total Pinjaman Aktif</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
