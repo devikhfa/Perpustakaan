@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LibTrack – Masuk</title>
+  <title>Perpustakaan Masuk</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <style>
@@ -241,7 +241,7 @@
 {{-- LEFT PANEL --}}
 <div class="left-panel">
   <div class="left-content">
-    <div class="left-tagline">Perpustakaan Digital<br><span>SMKN 3 Banjar</span></div>
+    <div class="left-tagline">Web Perpustakaan<br><span>SMKN 3 Banjar</span></div>
     <p class="left-desc">Cari buku favoritmu, pinjam kapan aja, dan cek status pengembaliannya dengan mudah.</p>
     <div class="stats-row">
     </div>

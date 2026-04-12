@@ -36,7 +36,11 @@ class KatalogController extends Controller
             })
             ->get();
 
-        return view('katalog.index', compact('buku'));
+        $pinjamAktif = Transaksi::where('peminjam_id', Session::get('user_id'))
+            ->where('status_transaksi', '!=', 3) // belum selesai
+            ->count();
+
+        return view('katalog.index', compact('buku', 'pinjamAktif'));
     }
 
     /**
@@ -71,10 +75,7 @@ class KatalogController extends Controller
         }
 
         // Ambil data buku untuk dipinjam
-        $buku = Buku::join('kategoris', 'bukus.kategori_id', '=', 'kategoris.id')
-            ->where('bukus.id', $id)
-            ->select('bukus.*', 'kategoris.nama_kategori as kategori')
-            ->firstOrFail();
+        $buku = Buku::with('kategori')->findOrFail($id);
 
         return view('katalog.pinjam', compact('buku'));
     }
@@ -84,6 +85,14 @@ class KatalogController extends Controller
      */
     public function store(Request $request)
     {
+        $pinjamAktif = Transaksi::where('peminjam_id', $request->peminjam_id)
+            ->where('status_transaksi', '!=', 3)
+            ->count();
+
+        if ($pinjamAktif >= 3) {
+            return redirect()->route('katalog.index')
+                ->with('error', 'Batas maksimal peminjaman 3 buku. Kembalikan buku dulu!');
+        }
         // Validasi input transaksi
         $request->validate([
             'peminjam_id' => 'required|exists:penggunas,id',

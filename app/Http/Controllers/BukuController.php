@@ -28,8 +28,14 @@ class BukuController extends Controller
             ->select('bukus.*', 'kategoris.nama_kategori as kategori')
             ->get();
 
+        //hitung pinjam aktif user
+        $pinjamAktif = DB::table('transaksis')
+        ->where('peminjam_id', Session::get('user_id'))
+        ->where('status_transaksi', '!=', 3) // belum selesai
+        ->count();
+
         // Kirim data ke view
-        return view('buku.index', compact('buku'));
+        return view('buku.index', compact('buku', 'pinjamAktif'));
     }
 
     /**

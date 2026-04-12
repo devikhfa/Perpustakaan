@@ -31,15 +31,10 @@
                     </div>
 
                     <div class="card-body text-center">
-
-                        @if(empty($buku[0]->sampul))
-                            <img src="{{ url('image/nophoto.jpg') }}"
-                                class="img-fluid rounded"
-                                style="max-height: 300px;">
+                        @if($pengguna->foto)
+                            <img src="{{ asset('storage/' . $pengguna->foto) }}" class="img-fluid rounded" style="max-height: 300px;">
                         @else
-                            <img src="{{ url('image/'.$buku[0]->sampul) }}"
-                                class="img-fluid rounded"
-                                style="max-height: 300px;">
+                            <img src="{{ url('image/nophoto.jpg') }}" class="img-fluid rounded" style="max-height: 300px;">
                         @endif
 
                     </div>

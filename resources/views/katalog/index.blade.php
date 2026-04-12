@@ -52,6 +52,20 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
+                @if(Session::get('user_role') == 3)
+                    <div class="alert alert-info mb-3">
+                        <i class="fas fa-info-circle"></i>
+                        Sisa kuota peminjaman kamu:
+                        <b>{{ max(0, 3 - $pinjamAktif) }}</b> dari 3 buku
+                    </div>
+
+                    @if($pinjamAktif >= 3)
+                        <div class="alert alert-danger mb-3">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Kamu sudah mencapai batas maksimal peminjaman. Kembalikan buku terlebih dahulu untuk bisa meminjam lagi.
+                        </div>
+                    @endif
+                @endif
                 <section class="content">
                     <div class="container-fluid">
                         <div class="row justify-content-center">
@@ -84,10 +98,18 @@
                                                     $role = Session::get('user_role');
                                                 @endphp
                                                  <!-- hanya user role 3 yang bisa pinjam -->
-                                                @if($role == 3)
-                                                    <a href="{{ route('katalog.pinjam', $k->id) }}" class="btn btn-sm btn-success">
-                                                        <i class="fas fa-book"></i> Pinjam
-                                                    </a>
+                                               @if($role == 3)
+
+                                                    @if($pinjamAktif >= 3)
+                                                        <button class="btn btn-sm btn-secondary" disabled>
+                                                            <i class="fas fa-ban"></i> Batas Pinjam
+                                                        </button>
+                                                    @else
+                                                        <a href="{{ route('katalog.pinjam', $k->id) }}" class="btn btn-sm btn-success">
+                                                            <i class="fas fa-book"></i> Pinjam
+                                                        </a>
+                                                    @endif
+
                                                 @endif
                                             </div>
                                         </div>

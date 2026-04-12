@@ -27,45 +27,63 @@
         <div class="col-12">
             <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Daftar Penggunna</h3>
-                <a href="{{ route('pengguna.create') }}" class="btn btn-sm btn-primary card-tools">Tambah data</a>
-            </div>
+    <h3 class="card-title">Daftar Pengguna</h3>
+
+    @if(Session::get('user_role') == 1)
+        <a href="{{ route('pengguna.create') }}" class="btn btn-sm btn-primary card-tools">
+            Tambah data
+        </a>
+    @endif
+</div>
             <!-- /.card-header -->
             <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>Password</th>
-                            <th>Alamat</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ( $pengguna as $k )
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $k->nama_pengguna }}</td>
-                                <td>{{ $k->email }}</td>
-                                <td>{{ $k->password }}</td>
-                                <td>{{ $k->alamat }}</td>
-                                <td>
-                                    <a href="{{ route('pengguna.detail', $k->id) }}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> Detail</a>
-                                    <a href="{{ route('pengguna.edit', $k->id) }}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Edit</a>
-                                    <form action="{{ route('pengguna.destroy', $k->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin mau hapus?')">
-                                            <i class="fas fa-trash"></i> Hapus
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                    </tbody>
-                </table>
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Alamat</th>
+                <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach ($pengguna as $k)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $k->nama_pengguna }}</td>
+                <td>{{ $k->email }}</td>
+                <td>{{ $k->password }}</td>
+                <td>{{ $k->alamat }}</td>
+                <td>
+                    <a href="{{ route('pengguna.detail', $k->id) }}" class="btn btn-sm btn-info">
+                        <i class="fas fa-eye"></i> Detail
+                    </a>
+
+                    @if(Session::get('user_role') == 1)
+                        <a href="{{ route('pengguna.edit', $k->id) }}" class="btn btn-sm btn-success">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    @endif
+
+                    @if(in_array(Session::get('user_role'), [1, 2]))
+                        <form action="{{ route('pengguna.destroy', $k->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Yakin mau hapus?')">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        </form>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
             </div>
             <!-- /.card-body -->
         </div>

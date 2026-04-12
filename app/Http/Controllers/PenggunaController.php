@@ -13,8 +13,26 @@ class PenggunaController extends Controller
      */
     public function index()
     {
-        // Ambil pengguna yang masih aktif
-        $pengguna = Pengguna::where('status', true)->get();
+        $role = Session::get('user_role');
+
+        if ($role == 1) {
+            // Kepala → Petugas
+            $pengguna = Pengguna::where('status', true)
+                ->where('role_id', 2)
+                ->get();
+        } 
+        elseif ($role == 2) {
+            // Petugas → Anggota
+            $pengguna = Pengguna::where('status', true)
+                ->where('role_id', 3)
+                ->get();
+        } 
+        else {
+            // Anggota → dirinya sendiri
+            $pengguna = Pengguna::where('id', Session::get('user_id'))
+                ->get();
+        }
+
         return view('pengguna.index', compact('pengguna'));
     }
 
@@ -22,36 +40,42 @@ class PenggunaController extends Controller
      * Menampilkan form tambah pengguna
      */
     public function create()
-    {
-        return view('pengguna.create');
+{
+    if (Session::get('user_role') != 1) {
+        abort(403, 'Hanya Kepala yang boleh tambah petugas');
     }
+
+    return view('pengguna.create');
+}
 
     /**
      * Menyimpan data pengguna baru
      */
     public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'nama_pengguna' => 'required|string|max:255',
-            'email' => 'required|email|unique:penggunas,email',
-            'password' => 'required|min:6',
-            'alamat' => 'required|string',
-            'status' => 'required|boolean',
-        ]);
-
-        // Simpan data pengguna baru
-        \App\Models\Pengguna::create([
-            'role_id' => 2,
-            'nama_pengguna' => $request->nama_pengguna,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'alamat' => $request->alamat,
-            'status' => $request->status,
-        ]);
-
-        return redirect()->route('pengguna.index')->with('success', 'Data berhasil ditambahkan');
+{
+    if (Session::get('user_role') != 1) {
+        abort(403);
     }
+
+    $request->validate([
+        'nama_pengguna' => 'required|string|max:255',
+        'email' => 'required|email|unique:penggunas,email',
+        'password' => 'required|min:6',
+        'alamat' => 'required|string',
+        'status' => 'required|boolean',
+    ]);
+
+    Pengguna::create([
+        'role_id' => 2, 
+        'nama_pengguna' => $request->nama_pengguna,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+        'alamat' => $request->alamat,
+        'status' => $request->status,
+    ]);
+
+    return redirect()->route('pengguna.index')->with('success', 'Data berhasil ditambahkan');
+}
 
     /**
      * Menampilkan detail pengguna
@@ -67,61 +91,77 @@ class PenggunaController extends Controller
      * Menampilkan form edit pengguna
      */
     public function edit(string $id)
-    {
-        $pengguna = Pengguna::findOrFail($id);
-
-        return view('pengguna.edit', compact('pengguna'));
+{
+    if (Session::get('user_role') != 1) {
+        abort(403);
     }
 
+    $pengguna = Pengguna::findOrFail($id);
+
+    if ($pengguna->role_id != 2) {
+        abort(403, 'Hanya boleh edit petugas');
+    }
+
+    return view('pengguna.edit', compact('pengguna'));
+}
     /**
      * Update data pengguna
      */
     public function update(Request $request, string $id)
-    {
-        // cari data user
-        $pengguna = Pengguna::findOrFail($id);
-
-        // validasi input
-        $request->validate([
-            'nama_pengguna' => 'required|string|max:255',
-            'email' => 'required|email|unique:penggunas,email,' . $id,
-            'password' => 'nullable|min:6',
-            'alamat' => 'required|string',
-            'status' => 'required|boolean',
-        ]);
-
-        // update data dasar
-        $pengguna->update([
-            'nama_pengguna' => $request->nama_pengguna,
-            'email' => $request->email,
-            'alamat' => $request->alamat,
-            'status' => $request->status,
-            'foto' => null // reset foto (kalau tidak ada upload baru)
-        ]);
-
-        // update password kalau diisi
-        if ($request->password) {
-            $pengguna->update([
-                'password' => bcrypt($request->password)
-            ]);
-        }
-
-        return redirect()->route('pengguna.index')->with('success', 'Data berhasil diupdate');
+{
+    if (Session::get('user_role') != 1) {
+        abort(403);
     }
+
+    $pengguna = Pengguna::findOrFail($id);
+
+    if ($pengguna->role_id != 2) {
+        abort(403);
+    }
+
+    $request->validate([
+        'nama_pengguna' => 'required|string|max:255',
+        'email' => 'required|email|unique:penggunas,email,' . $id,
+        'password' => 'nullable|min:6',
+        'alamat' => 'required|string',
+        'status' => 'required|boolean',
+    ]);
+
+    $pengguna->update([
+        'nama_pengguna' => $request->nama_pengguna,
+        'email' => $request->email,
+        'alamat' => $request->alamat,
+        'status' => $request->status,
+    ]);
+
+    if ($request->password) {
+        $pengguna->update([
+            'password' => bcrypt($request->password)
+        ]);
+    }
+
+    return redirect()->route('pengguna.index');
+}
 
     /**
      * Menghapus pengguna
      */
     public function destroy(string $id)
     {
+        if (Session::get('user_role') != 1) {
+            abort(403);
+        }
+
         $pengguna = Pengguna::findOrFail($id);
 
-        // hapus data user dari database (hard delete)
+        if ($pengguna->role_id != 2) {
+            abort(403, 'Hanya boleh hapus petugas');
+        }
+
         $pengguna->delete();
 
-        return redirect()->route('pengguna.index')->with('success', 'Data berhasil dihapus');
+        return back();
     }
-
     /**
      * Menampilkan profile user yang sedang login
      */

@@ -100,8 +100,8 @@
                     </div>
                     
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <a href="{{ route('buku.index') }}" class="btn btn-secondary">Kembali</a>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Submit</button>
+                        <a href="{{ route('buku.index') }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Kembali</a>
                     </div>
                 </form>
             </div>
