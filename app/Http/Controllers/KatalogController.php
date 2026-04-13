@@ -34,13 +34,18 @@ class KatalogController extends Controller
                       ->orWhere('kategoris.nama_kategori', 'like', '%' . $request->search . '%');
                 });
             })
+            // FILTER KATEGORI
+            ->when($request->kategori, function ($query) use ($request) {
+                $query->where('bukus.kategori_id', $request->kategori);
+            })
             ->get();
 
+        $kategoris = \App\Models\Kategori::orderBy('nama_kategori')->get();
         $pinjamAktif = Transaksi::where('peminjam_id', Session::get('user_id'))
             ->where('status_transaksi', '!=', 3) // belum selesai
             ->count();
 
-        return view('katalog.index', compact('buku', 'pinjamAktif'));
+        return view('katalog.index', compact('buku', 'pinjamAktif', 'kategoris'));
     }
 
     /**

@@ -88,6 +88,48 @@
                     <div class="card-header">
                         <h3 class="card-title">Daftar Peminjaman Buku</h3>
                     </div>
+                    <div class="card-body pb-0">
+                        <form method="GET" action="{{ route('laporan.peminjaman') }}">
+                            <div class="row align-items-end">
+
+                                <div class="col-md-3">
+                                    <label class="font-weight-bold">Dari Tanggal</label>
+                                    <input type="date" name="dari" class="form-control"
+                                        value="{{ request('dari') }}">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="font-weight-bold">Sampai Tanggal</label>
+                                    <input type="date" name="sampai" class="form-control"
+                                        value="{{ request('sampai') }}">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="font-weight-bold">Berdasarkan</label>
+                                    <select name="filter" class="form-control">
+                                        <option value="tgl_pinjam" {{ request('filter') == 'tgl_pinjam' ? 'selected' : '' }}>
+                                            Tanggal Pinjam
+                                        </option>
+                                        <option value="tgl_dikembalikan" {{ request('filter') == 'tgl_dikembalikan' ? 'selected' : '' }}>
+                                            Tanggal Kembali
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="d-flex">
+                                        <button type="submit" class="btn btn-primary mr-2">
+                                            <i class="fas fa-search"></i> Filter
+                                        </button>
+                                        <a href="{{ route('laporan.peminjaman') }}" class="btn btn-secondary">
+                                            <i class="fas fa-sync"></i> Reset
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-striped">

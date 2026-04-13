@@ -20,17 +20,31 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-12">
+        <!-- FORM SEARCH + FILTER -->
         <form action="{{ route('katalog.index') }}" method="GET" class="mb-3">
             <div class="input-group">
+
                 <input type="text" name="search" class="form-control"
                     placeholder="Cari judul atau kategori buku..."
                     value="{{ request('search') }}">
+
+                <!-- FILTER KATEGORI -->
+                <select name="kategori" class="form-control" style="max-width:200px;">
+                    <option value="">Semua Kategori</option>
+                    @foreach($kategoris as $kat)
+                        <option value="{{ $kat->id }}"
+                            {{ request('kategori') == $kat->id ? 'selected' : '' }}>
+                            {{ $kat->nama_kategori }}
+                        </option>
+                    @endforeach
+                </select>
 
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
+
             </div>
         </form>
         </div><!-- /.col -->
