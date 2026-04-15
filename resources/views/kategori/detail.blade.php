@@ -86,7 +86,6 @@
                 <div class="card-footer text-right">
 
                     <a href="{{ route('kategori.index') }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Kembali</a>
-                    <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Edit</a>
 
                 </div>
 

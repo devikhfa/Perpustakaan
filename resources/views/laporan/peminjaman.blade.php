@@ -152,8 +152,20 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $t->nama_pengguna }}</td>
                                     <td>{{ $t->judul }}</td>
-                                    <td>{{ $t->tgl_pinjam ? \Carbon\Carbon::parse($t->tgl_pinjam)->format('d/m/Y') : '-' }}</td>
-                                    <td>{{ $t->tgl_jatuh_tempo ? \Carbon\Carbon::parse($t->tgl_jatuh_tempo)->format('d/m/Y') : '-' }}</td>
+                                    <td>
+                                        @if($t->tgl_pinjam)
+                                            {{ \Carbon\Carbon::parse($t->tgl_pinjam)->format('d/m/Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($t->tgl_jatuh_tempo)
+                                            {{ \Carbon\Carbon::parse($t->tgl_jatuh_tempo)->format('d/m/Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($t->tgl_dikembalikan)
                                             {{ \Carbon\Carbon::parse($t->tgl_dikembalikan)->format('d/m/Y') }}
@@ -178,33 +190,20 @@
                                     </td>
                                     <!-- hitung denda -->
                                     <td>
-                                        @php
-                                            $denda = $t->denda ?? 0;
-                                            if ($denda == 0 && $hariTerlambat > 0) {
-                                                $denda = $hariTerlambat * 3000;
-                                            }
-                                        @endphp
-                                        @if($denda > 0)
-                                            <span class="text-danger font-weight-bold">
-                                                Rp {{ number_format($denda, 0, ',', '.') }}
-                                            </span>
-                                        @else
-                                            Rp 0
-                                        @endif
+                                        <span class="text-danger font-weight-bold">
+                                            Rp {{ number_format($t->denda, 0, ',', '.') }}
+                                        </span>
                                     </td>
                                     <!-- status transaksi -->
                                     <td>
-                                        @php
-                                            $status = $t->status_transaksi;
-                                        @endphp
-                                        @if($status == 1)
-                                            <span class="badge badge-primary">Dipinjam</span>
-                                        @elseif($status == 2)
-                                            <span class="badge badge-warning">Menunggu Verifikasi</span>
-                                        @elseif($status == 3)
-                                            <span class="badge badge-success">Dikembalikan</span>
+                                        @if($t->status_transaksi == 1)
+                                            <span class="badge badge-primary">Menunggu Konfirmasi Peminjaman</span>
+                                        @elseif($t->status_transaksi == 2)
+                                            <span class="badge badge-info">Dipinjam</span>
+                                        @elseif($t->status_transaksi == 3)
+                                            <span class="badge badge-warning">Menuggu Konfirmasi Pengembalian</span>
                                         @else
-                                            <span class="badge badge-secondary">{{ $status }}</span>
+                                            <span class="badge badge-success">Dikembalikan</span>
                                         @endif
                                     </td>
                                 </tr>

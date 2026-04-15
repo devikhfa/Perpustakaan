@@ -51,8 +51,20 @@
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $t->peminjam->nama_pengguna ?? $t->peminjam_id }}</td>
                             <td>{{ $t->buku->judul ?? 'Buku tidak ditemukan' }}</td>
-                            <td>{{ \Carbon\Carbon::parse($t->tgl_pinjam)->format('d/m/Y') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($t->tgl_jatuh_tempo)->format('d/m/Y') }}</td>
+                            <td>
+                                @if($t->tgl_pinjam)
+                                    {{ \Carbon\Carbon::parse($t->tgl_pinjam)->format('d/m/Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                @if($t->tgl_jatuh_tempo)
+                                    {{ \Carbon\Carbon::parse($t->tgl_jatuh_tempo)->format('d/m/Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td>
                                 @if($t->tgl_dikembalikan)
                                     {{ \Carbon\Carbon::parse($t->tgl_dikembalikan)->format('d/m/Y') }}
@@ -61,30 +73,15 @@
                                 @endif
                             </td>
                             <td>
-                                @php
-                                    $denda = 0;
-                                    // jika denda sudah tersimpan di DB
-                                    if (isset($t->denda) && $t->denda > 0) {
-                                        $denda = $t->denda;
-                                    } else {
-                                         // kalau belum kembali & sudah lewat jatuh tempo
-                                        if (!$t->tgl_dikembalikan && now()->startOfDay() > $t->tgl_jatuh_tempo->startOfDay()) {
-                                            $hariTerlambat = now()->startOfDay()->diffInDays($t->tgl_jatuh_tempo->startOfDay());
-                                            $denda = abs($hariTerlambat) * 2000;
-                                        // kalau sudah dikembalikan tapi telat
-                                        } elseif ($t->tgl_dikembalikan && $t->tgl_dikembalikan->startOfDay() > $t->tgl_jatuh_tempo->startOfDay()) {
-                                            $hariTerlambat = $t->tgl_dikembalikan->startOfDay()->diffInDays($t->tgl_jatuh_tempo->startOfDay());
-                                            $denda = abs($hariTerlambat) * 2000;
-                                        }
-                                    }
-                                @endphp
-                                {{ number_format($denda, 0, ',', '.') }}
+                                {{ number_format($t->denda, 0, ',', '.') }}
                             </td>
                             <td>
                                 @if($t->status_transaksi == 1)
-                                    <span class="badge badge-primary">Dipinjam</span>
+                                    <span class="badge badge-primary">Menunggu Konfirmasi Peminjaman</span>
                                 @elseif($t->status_transaksi == 2)
-                                    <span class="badge badge-warning">Mengajukan Pengembalian</span>
+                                    <span class="badge badge-info">Dipinjam</span>
+                                @elseif($t->status_transaksi == 3)
+                                    <span class="badge badge-warning">Menuggu Konfirmasi Pengembalian</span>
                                 @else
                                     <span class="badge badge-success">Dikembalikan</span>
                                 @endif
@@ -94,11 +91,23 @@
                                     <a href="{{ route('transaksi.detailtransaksi', $t->id) }}" class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i> Detail
                                     </a>
-                                    @if($t->status_transaksi == 2)
+
+                                    @if($t->status_transaksi == 4)
+                                    <a href="{{ route('transaksi.struk', $t->id) }}" target="_blank" class="btn btn-sm btn-dark">
+                                        <i class="fas fa-print"></i> Struk
+                                    </a>
+                                    @endif
+                                    @if($t->status_transaksi == 1)
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="return verifikasiPeminjaman({{ $t->id }})">
+                                        <i class="fas fa-undo"></i> Konfirmasi Peminjaman
+                                    </button>
+                                    @endif
+                                    @if($t->status_transaksi == 3)
                                     <button type="button" class="btn btn-sm btn-warning" onclick="return verifikasiKembali({{ $t->id }})">
                                         <i class="fas fa-undo"></i> Konfirmasi Pengembalian
                                     </button>
                                     @endif
+
                                     <button type="button" class="btn btn-sm btn-danger" onclick="hapusTransaksi({{ $t->id }})">
                                         <i class="fas fa-trash"></i> Hapus
                                     </button>
@@ -128,6 +137,52 @@
 <!-- /.content -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function verifikasiPeminjaman(id) {
+        if(confirm('Apakah Anda yakin ingin memverifikasi peminjaman buku ini?')) {
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Sedang memverifikasi pengembalian',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            $.ajax({
+                url: '/verifikasi-pinjam/' + id,
+                type: 'PUT',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: response.message,
+                            timer: 2000
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan saat verifikasi'
+                    });
+                }
+            });
+        }
+    }
+
     function verifikasiKembali(id) {
         if(confirm('Apakah Anda yakin ingin memverifikasi pengembalian buku ini?')) {
             Swal.fire({

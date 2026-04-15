@@ -39,9 +39,11 @@ route::post("/katalog/store", [KatalogController::class, 'store'])->name('katalo
 
 route::get("/riwayat-peminjaman", [TransaksiController::class, 'riwayatpeminjaman'])->name('transaksi.riwayatpeminjaman');
 route::get("/detail-transaksi/{id}", [TransaksiController::class, 'detailtransaksi'])->name('transaksi.detailtransaksi');
+Route::put('/verifikasi-pinjam/{id}', [TransaksiController::class, 'verifikasipinjam'])->name('transaksi.verifikasipinjam');
 Route::put('/kembalikan/{id}', [TransaksiController::class, 'kembalikan'])->name('transaksi.kembalikan');
 Route::put('/verifikasi-kembali/{id}', [TransaksiController::class, 'verifikasiKembali'])->name('transaksi.verifikasi');
 Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+Route::get('/struk-denda/{id}', [TransaksiController::class, 'strukDenda'])->name('transaksi.struk');
 
 Route::get('/login', [AuthController::class, 'masuk'])->name('login');
 Route::get('/register', [AuthController::class, 'daftar'])->name('register');

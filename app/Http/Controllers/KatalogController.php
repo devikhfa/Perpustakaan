@@ -134,8 +134,6 @@ class KatalogController extends Controller
             $transaksi = Transaksi::create([
                 'peminjam_id' => $request->peminjam_id,
                 'buku_id' => $request->buku_id,
-                'tgl_pinjam' => $request->tgl_pinjam,
-                'tgl_jatuh_tempo' => $request->tgl_jatuh_tempo,
                 'catatan' => $request->catatan,
                 'status_transaksi' => 1, // 1 = dipinjam
                 'status' => true,

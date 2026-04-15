@@ -67,6 +67,53 @@ class TransaksiController extends Controller
         return view('transaksi.detailtransaksi', compact('transaksi'));
     }
 
+     /**
+     * Proses pengembalian buku oleh user
+     */
+    public function verifikasipinjam(string $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            // ambil data transaksi
+            $transaksi = Transaksi::findOrFail($id);
+
+            // cek jika sudah dikembalikan / sedang proses
+            if ($transaksi->status_transaksi == 2) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Buku sudah dalam proses peminjaman'
+                ], 400);
+            }
+            
+            // update status pengembalian
+            $transaksi->status_transaksi = 2;
+            $transaksi->tgl_pinjam = now();
+            $transaksi->tgl_jatuh_tempo = now()->addDays(3);
+            $transaksi->updated_by = 1;
+            $transaksi->updated_at = now();
+            $transaksi->save();
+            
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Buku berhasil diverifikasi',
+                'data' => [
+                    'tgl_jatuh_tempo' => $transaksi->tgl_jatuh_tempo
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengembalikan buku: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * Proses pengembalian buku oleh user
      */
@@ -79,7 +126,7 @@ class TransaksiController extends Controller
             $transaksi = Transaksi::findOrFail($id);
 
             // cek jika sudah dikembalikan / sedang proses
-            if ($transaksi->status_transaksi == 2 || $transaksi->status_transaksi == 3) {
+            if ($transaksi->status_transaksi == 3 || $transaksi->status_transaksi == 4) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Buku sudah dalam proses pengembalian atau sudah dikembalikan'
@@ -99,8 +146,7 @@ class TransaksiController extends Controller
             }
 
             // update status pengembalian
-            $transaksi->status_transaksi = 2; // proses pengembalian
-            $transaksi->tgl_dikembalikan = now();
+            $transaksi->status_transaksi = 3; // proses menunggu pengembalian
             $transaksi->denda = $denda;
             $transaksi->updated_by = 1;
             $transaksi->updated_at = now();
@@ -138,7 +184,7 @@ class TransaksiController extends Controller
             $transaksi = Transaksi::findOrFail($id);
 
             // cek jika sudah diverifikasi
-            if ($transaksi->status_transaksi == 3) {
+            if ($transaksi->status_transaksi == 4) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Buku sudah diverifikasi sebelumnya'
@@ -146,7 +192,7 @@ class TransaksiController extends Controller
             }
 
             // cek harus sudah proses pengembalian
-            if ($transaksi->status_transaksi != 2) {
+            if ($transaksi->status_transaksi != 3) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Buku belum dalam proses pengembalian'
@@ -154,7 +200,8 @@ class TransaksiController extends Controller
             }
 
             // ubah status jadi selesai
-            $transaksi->status_transaksi = 3;
+            $transaksi->status_transaksi = 4;
+            $transaksi->tgl_dikembalikan = now();
             $transaksi->updated_by = 1;
             $transaksi->updated_at = now();
             $transaksi->save();
@@ -202,5 +249,34 @@ class TransaksiController extends Controller
             'success' => true,
             'message' => 'Transaksi berhasil dihapus'
         ]);
+    }
+
+    //Struk denda
+    public function strukDenda($id)
+    {
+        $transaksi = Transaksi::join('penggunas', 'transaksis.peminjam_id', '=', 'penggunas.id')
+            ->join('bukus', 'transaksis.buku_id', '=', 'bukus.id')
+            ->where('transaksis.id', $id)
+            ->select('transaksis.*', 'penggunas.nama_pengguna', 'bukus.judul')
+            ->firstOrFail();
+
+        $denda = 0;
+
+        if ($transaksi->tgl_dikembalikan && $transaksi->tgl_jatuh_tempo) {
+
+            $kembali = \Carbon\Carbon::parse($transaksi->tgl_dikembalikan)->startOfDay();
+            $tempo   = \Carbon\Carbon::parse($transaksi->tgl_jatuh_tempo)->startOfDay();
+
+            if ($kembali->gt($tempo)) {
+
+                $hari = $tempo->diffInDays($kembali); // HARI FULL, tanpa jam
+
+                $denda = $hari * 2000;
+            }
+        }
+
+        $transaksi->denda = (int) $denda;
+
+        return view('transaksi.struk', compact('transaksi'));
     }
 }
