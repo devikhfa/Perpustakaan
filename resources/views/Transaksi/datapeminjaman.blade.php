@@ -92,11 +92,7 @@
                                         <i class="fas fa-eye"></i> Detail
                                     </a>
 
-                                    @if($t->status_transaksi == 4)
-                                    <a href="{{ route('transaksi.struk', $t->id) }}" target="_blank" class="btn btn-sm btn-dark">
-                                        <i class="fas fa-print"></i> Struk
-                                    </a>
-                                    @endif
+                                   
                                     @if($t->status_transaksi == 1)
                                     <button type="button" class="btn btn-sm btn-secondary" onclick="return verifikasiPeminjaman({{ $t->id }})">
                                         <i class="fas fa-undo"></i> Konfirmasi Peminjaman

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Struk Denda</title>
@@ -48,4 +48,4 @@
 </div>
 
 </body>
-</html>
+</html> -->
