@@ -251,32 +251,32 @@ class TransaksiController extends Controller
         ]);
     }
 
-    //Struk denda
-    // public function strukDenda($id)
-    // {
-    //     $transaksi = Transaksi::join('penggunas', 'transaksis.peminjam_id', '=', 'penggunas.id')
-    //         ->join('bukus', 'transaksis.buku_id', '=', 'bukus.id')
-    //         ->where('transaksis.id', $id)
-    //         ->select('transaksis.*', 'penggunas.nama_pengguna', 'bukus.judul')
-    //         ->firstOrFail();
+    
+    public function strukDenda($id)
+    {
+        $transaksi = Transaksi::join('penggunas', 'transaksis.peminjam_id', '=', 'penggunas.id')
+            ->join('bukus', 'transaksis.buku_id', '=', 'bukus.id')
+            ->where('transaksis.id', $id)
+            ->select('transaksis.*', 'penggunas.nama_pengguna', 'bukus.judul')
+            ->firstOrFail();
 
-    //     $denda = 0;
+        $denda = 0;
 
-    //     if ($transaksi->tgl_dikembalikan && $transaksi->tgl_jatuh_tempo) {
+        if ($transaksi->tgl_dikembalikan && $transaksi->tgl_jatuh_tempo) {
 
-    //         $kembali = \Carbon\Carbon::parse($transaksi->tgl_dikembalikan)->startOfDay();
-    //         $tempo   = \Carbon\Carbon::parse($transaksi->tgl_jatuh_tempo)->startOfDay();
+            $kembali = \Carbon\Carbon::parse($transaksi->tgl_dikembalikan)->startOfDay();
+            $tempo   = \Carbon\Carbon::parse($transaksi->tgl_jatuh_tempo)->startOfDay();
 
-    //         if ($kembali->gt($tempo)) {
+            if ($kembali->gt($tempo)) {
 
-    //             $hari = $tempo->diffInDays($kembali); // HARI FULL, tanpa jam
+                $hari = $tempo->diffInDays($kembali); // HARI FULL, tanpa jam
 
-    //             $denda = $hari * 2000;
-    //         }
-    //     }
+                $denda = $hari * 2000;
+            }
+        }
 
-    //     $transaksi->denda = (int) $denda;
+        $transaksi->denda = (int) $denda;
 
-    //     return view('transaksi.struk', compact('transaksi'));
-    // }
+        return view('transaksi.struk', compact('transaksi'));
+    }
 }

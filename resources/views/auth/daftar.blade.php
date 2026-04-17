@@ -18,18 +18,13 @@
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
-
-      /* background image */
       background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1200') center/cover no-repeat;
-
       display: flex;
       justify-content: center;
       align-items: center;
-
       position: relative;
     }
 
-    /* dark overlay */
     body::before {
       content: '';
       position: absolute;
@@ -37,18 +32,14 @@
       background: rgba(0,0,0,0.55);
     }
 
-    /* CARD */
     .register-card {
       position: relative;
       z-index: 1;
-
       width: 620px;
       max-width: 92%;
-
       background: #fff;
       border-radius: 16px;
       padding: 42px 40px;
-
       box-shadow: 0 25px 70px rgba(0,0,0,0.35);
     }
 
@@ -130,12 +121,10 @@
       width: 100%;
       padding: 12px;
       margin-top: 10px;
-
       background: #2f6df6;
       color: white;
       border: none;
       border-radius: 10px;
-
       font-weight: 700;
       cursor: pointer;
     }
@@ -173,7 +162,6 @@
       color: #b91c1c;
     }
 
-    /* responsive */
     @media (max-width: 768px) {
       .form-row {
         grid-template-columns: 1fr;
@@ -190,6 +178,18 @@
   <h2>Daftar</h2>
   <p>Isi data berikut untuk membuat akun perpustakaan.</p>
 
+  {{-- ✅ ERROR VALIDASI --}}
+  @if ($errors->any())
+    <div class="alert danger">
+      <ul style="padding-left:15px;">
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
+  {{-- ERROR MANUAL --}}
   @if(session('error'))
     <div class="alert danger">
       {{ session('error') }}
@@ -203,7 +203,7 @@
       <label>Nama Lengkap</label>
       <div class="input-wrap">
         <i class="bi bi-person"></i>
-        <input type="text" name="nama_pengguna" value="{{ old('nama_pengguna') }}">
+        <input type="text" name="nama_pengguna" value="{{ old('nama_pengguna') }}" required>
       </div>
     </div>
 
@@ -211,7 +211,7 @@
       <label>Email</label>
       <div class="input-wrap">
         <i class="bi bi-envelope"></i>
-        <input type="email" name="email" value="{{ old('email') }}">
+        <input type="email" name="email" value="{{ old('email') }}" required>
       </div>
     </div>
 
@@ -228,7 +228,7 @@
         <label>Password</label>
         <div class="input-wrap">
           <i class="bi bi-lock"></i>
-          <input type="password" name="password">
+          <input type="password" name="password" required>
         </div>
       </div>
 
@@ -236,7 +236,7 @@
         <label>Konfirmasi</label>
         <div class="input-wrap">
           <i class="bi bi-lock-fill"></i>
-          <input type="password" name="password_confirmation">
+          <input type="password" name="password_confirmation" required>
         </div>
       </div>
     </div>

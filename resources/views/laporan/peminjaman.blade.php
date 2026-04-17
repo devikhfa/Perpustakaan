@@ -173,20 +173,21 @@
                                             <span class="badge badge-warning">Belum Kembali</span>
                                         @endif
                                     </td>
-                                    <!-- hitung keterlambatan -->
+                                    {{-- hitung keterlambatan --}}
                                     <td>
-                                        @php
+                                        {{-- @php
                                             $hariTerlambat = 0;
                                             $tglKembali = $t->tgl_dikembalikan ?? now();
                                             if ($tglKembali > $t->tgl_jatuh_tempo) {
                                                 $hariTerlambat = abs(($tglKembali->startOfDay())->diffInDays($t->tgl_jatuh_tempo->startOfDay()));
                                             }
-                                        @endphp
-                                        @if($hariTerlambat > 0)
+                                        @endphp --}}
+                                        {{-- @if($hariTerlambat > 0)
                                             <span class="text-danger">{{ $hariTerlambat }} hari</span>
                                         @else
                                             <span class="text-success">-</span>
-                                        @endif
+                                        @endif --}}
+                                        -
                                     </td>
                                     <!-- hitung denda -->
                                     <td>

@@ -70,10 +70,10 @@
                     <div class="alert alert-info mb-3">
                         <i class="fas fa-info-circle"></i>
                         Sisa kuota peminjaman kamu:
-                        <b>{{ max(0, 4 - $pinjamAktif) }}</b> dari 4 buku
+                        <b>{{ max(0, 3 - $pinjamAktif) }}</b> dari 3 buku
                     </div>
 
-                    @if($pinjamAktif >= 4)
+                    @if($pinjamAktif >= 3)
                         <div class="alert alert-danger mb-3">
                             <i class="fas fa-exclamation-triangle"></i>
                             Kamu sudah mencapai batas maksimal peminjaman. Kembalikan buku terlebih dahulu untuk bisa meminjam lagi.
